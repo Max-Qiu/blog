@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
+<div th:fragment="content">
+    <div style="padding: 15px;">
+        <button class="layui-btn" onclick="clean()">文件清理</button>
+        <button class="layui-btn" onclick="sitemap()">生成sitemap.xml</button>
+    </div>
+</div>
+<script type="text/javascript" th:fragment="pageScript">
+    layui.use('layer', function () {
+        let layer = layui.layer;
+    })
+
+    function clean() {
+        $.post("/_admin/clean", function (flag) {
+            if (flag.code == 0) {
+                layer.msg("清理了" + flag.data + "个文件", {
+                    icon: 1,
+                    time: 1000
+                });
+            } else {
+                layer.msg(falg.msg, {
+                    icon: 1,
+                    time: 1000
+                });
+            }
+        })
+    }
+
+    function sitemap() {
+        $.post("/_admin/sitemap", function (flag) {
+            if (flag.code == 0) {
+                layer.msg("生成生成成功", {
+                    icon: 1,
+                    time: 1000
+                });
+            } else {
+                layer.msg('生成失败', {
+                    icon: 1,
+                    time: 1000
+                });
+            }
+        })
+    }
+</script>
+</html>

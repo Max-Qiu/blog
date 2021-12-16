@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:fragment="public_head">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+        <link rel="icon" href="/favicon.ico">
+        <link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/layui/2.5.7/css/layui.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/assets/common/css/front.min.css?V=20210705"/>
+        <link rel="stylesheet" type="text/css" href="https://at.alicdn.com/t/font_1838753_g9udfttom9b.css"/>
+        <style type="text/css">
+            * {
+                font-family: Consolas, "Helvetica Neue", Helvetica, "PingFang SC", Tahoma, Arial, sans-serif;;
+            }
+
+            body {
+                background-image: url("/assets/common/img/bg.jpg");
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block th:fragment="public_page">
+    <div class="sidebar-content">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <img src="/assets/common/img/face.jpg" alt=""><br/><br/>
+                <span class="layui-card-header-title">麦克斯仇</span><br/>
+                <span>Think different</span>
+            </div>
+            <div class="layui-card-body">
+                <ul>
+                    <li class="txt">
+                        <span th:text="${countShow}">101</span><br/>
+                        <span>文章</span>
+                    </li>
+                    <li class="visitors">
+                        <span id="allViewCount" th:text="${countView}">1000</span><br/>
+                        <span>阅读</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu" class="layui-nav">
+            <li class="layui-nav-item">
+                <a href="/">首页<br/>INDEX</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/article">文章<br/>ARTICLE</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/about/web">关于<br/>ABOUT</a>
+            </li>
+        </ul>
+    </div>
+</th:block>
+<th:block th:fragment="public_script">
+    <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.staticfile.org/layui/2.5.7/layui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let path = window.location.pathname;
+            // 仅取第一个斜杠以及后缀
+            while (path.lastIndexOf("/") != 0) {
+                path = path.substr(0, path.lastIndexOf("/"));
+            }
+            // 关于路径特殊处理
+            if (path == "/about") {
+                path = "/about/web";
+            }
+            // 激活样式
+            $('#menu a[href="' + path + '"]').parent().addClass("layui-this");
+        });
+
+        layui.use(['element', 'util'], function () {
+            let util = layui.util;
+            util.fixbar({
+                bar1: false,
+                css: {
+                    right: 40,
+                    bottom: 40
+                }
+            });
+        });
+
+        function jump(url) {
+            window.location.href = url;
+        }
+    </script>
+</th:block>
+</body>
+</html>

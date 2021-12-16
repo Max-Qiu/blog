@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>更新记录 | 麦克斯仇的博客</title>
+    <th:block th:insert="layout :: public_head">
+    </th:block>
+</head>
+<body>
+<th:block th:insert="layout :: public_page">
+</th:block>
+<div class="main about history">
+    <th:block th:insert="about/public_type_page :: public_type_tabs">
+    </th:block>
+    <div class="item">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>SpringBoot版</legend>
+        </fieldset>
+        <ul class="layui-timeline">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年12月16日</h3>
+                    <p>V3.0.0</p>
+                    <ul>
+                        <li>折腾 SpringCloud 结束，回归 SpringBoot</li>
+                        <li>使用 git 管理代码，并在 GitHub/Gitee 开源</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年07月17日</h3>
+                    <ul>
+                        <li>折腾 SpringCloud ，暂时下线</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年07月01日</h3>
+                    <p>V2.0.0</p>
+                    <ul>
+                        <li>下线 JFinal 版，管理端改为 SpringBoot 版，方便后续切换为 SpringCloud</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年08月28日</h3>
+                    <p>V1.0.0</p>
+                    <ul>
+                        <li>SpringBoot 版用户端上线</li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>SpringCloud版</legend>
+        </fieldset>
+        <ul class="layui-timeline">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年12月05日</h3>
+                    <p>V1.2.0</p>
+                    <ul>
+                        <li>SpringBoot 升级至 2.6.1</li>
+                        <li>SpringCloud 升级至 2021.0.0</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年11月21日</h3>
+                    <p>V1.1.3</p>
+                    <ul>
+                        <li>删除 ARTS 模块</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年10月10日</h3>
+                    <p>V1.1.2</p>
+                    <ul>
+                        <li>更新部分 POM 依赖</li>
+                        <li>弃用 Sleuth + Zipkin 链路追踪（PS：没啥作用）</li>
+                        <li>弃用 Druid ，使用默认的 HikariCP 连接池</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年09月13日</h3>
+                    <p>V1.1.1</p>
+                    <ul>
+                        <li>更新部分 POM 依赖</li>
+                        <li>使用 MySQL 的字段默认值功能代替 MybatisPlus 的自动插入</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年08月14日</h3>
+                    <p>V1.1.0</p>
+                    <ul>
+                        <li>添加 Sleuth + Zipkin 链路追踪</li>
+                        <li>优化 JVM 启动参数</li>
+                        <li>优化 Nginx 配置</li>
+                        <li>修复了一些 bug</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年07月22日</h3>
+                    <p>V1.0.0</p>
+                    <ul>
+                        <li>第一阶段完成，正式上线</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年07月17日</h3>
+                    <p>Test</p>
+                    <ul>
+                        <li>SpringCloud 版替换 SpringBoot 版</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年07月01日</h3>
+                    <ul>
+                        <li>开始编写</li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>JFinal版</legend>
+        </fieldset>
+        <ul class="layui-timeline">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年04月29日</h3>
+                    <p>V3.1.1</p>
+                    <ul>
+                        <li>文章标签显示各个标签文章数量</li>
+                        <li>文章目录设置最大高度</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2021年01月03日</h3>
+                    <p>V3.1.0</p>
+                    <ul>
+                        <li>添加 ARTS 模块</li>
+                        <li>文章目录移动到文章右侧悬浮窗</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年11月24日</h3>
+                    <p>V3.0.0</p>
+                    <ul>
+                        <li>使用 Elasticsearch 全文搜索代替MySQL查询</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年09月10日</h3>
+                    <p>V2.4.0</p>
+                    <ul>
+                        <li>使用 Redis 缓存解决文章数、阅读数双平台不同步的问题</li>
+                        <li>运行环境升级为 jdk11</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年08月13日</h3>
+                    <p>V2.2.0</p>
+                    <ul>
+                        <li>添加文章评论的功能</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年06月23日</h3>
+                    <p>V2.1.1</p>
+                    <ul>
+                        <li>修复 markdown 文本 -- 变为 - 的错误</li>
+                        <li>修改部分 markdown 文本文字颜色样式</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年06月02日</h3>
+                    <p>V2.1.0</p>
+                    <ul>
+                        <li>首页展示总文章数、阅读数</li>
+                        <li>添加阅读量的统计</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年05月24日</h3>
+                    <p>V2.0.0</p>
+                    <ul>
+                        <li>添加首页</li>
+                        <li>首页显示热门文章</li>
+                        <li>首页显示人生进度条</li>
+                        <li>新增文章置顶</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年05月12日</h3>
+                    <p>V1.2.1</p>
+                    <ul>
+                        <li>强制 HTTPS</li>
+                        <li>支持 HTTP/2</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年05月09日</h3>
+                    <p>V1.2.0</p>
+                    <ul>
+                        <li>更换域名：www.qiuzhihui.cn → maxqiu.com</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2020年02月20日</h3>
+                    <p>V1.1.0</p>
+                    <ul>
+                        <li>修改为 Docker 环境下部署</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2019年02月21日</h3>
+                    <p>V1.0.1</p>
+                    <ul>
+                        <li>修复了 cdn 加速域名也能直接访问网页的问题</li>
+                        <li>添加了管理员登录的短信通知，通知登录地理位置</li>
+                        <li>添加网站地图文件 sitemap.txt</li>
+                        <li>更新了 markdown 文件的加载方式，改为加载 md 源码后渲染 HTML</li>
+                        <li>添加了 markdown 的 [TOC] 目录功能</li>
+                        <li>添加了文章展示中返回顶部的功能</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2019年02月13日</h3>
+                    <p>V1.0.0<br/>历时一个多月，第一版完成</p>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2019年01月06日</h3>
+                    <p>开始建站！</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<th:block th:insert="layout :: public_script">
+</th:block>
+<th:block th:insert="about/public_type_page :: public_type_script">
+</th:block>
+</body>
+</html>

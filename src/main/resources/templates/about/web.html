@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>网站介绍 | 麦克斯仇的博客</title>
+    <th:block th:insert="layout :: public_head">
+    </th:block>
+</head>
+<body>
+<th:block th:insert="layout :: public_page">
+</th:block>
+<div class="main about">
+    <th:block th:insert="about/public_type_page :: public_type_tabs">
+    </th:block>
+    <div class="item">
+        <h4 class="title">项目源码</h4>
+        <p>SpringCloud 版</p>
+        <ul>
+            <li><a target="_blank" href="https://github.com/Max-Qiu/max-blog">https://github.com/Max-Qiu/max-blog</a></li>
+            <li><a target="_blank" href="https://gitee.com/Max-Qiu/max-blog">https://gitee.com/Max-Qiu/max-blog</a></li>
+        </ul>
+        <p>SpringBoot 版</p>
+        <ul>
+            <li><a target="_blank" href="https://github.com/Max-Qiu/min-blog">https://github.com/Max-Qiu/min-blog</a></li>
+            <li><a target="_blank" href="https://gitee.com/Max-Qiu/min-blog">https://gitee.com/Max-Qiu/min-blog</a></li>
+        </ul>
+        <h4 class="title">技术说明</h4>
+        <p>详见源码文档</p>
+        <h4 class="title">版权说明</h4>
+        <p><b>页面：</b>网页模板是在&nbsp;<a target="_blank" href="https://fly.layui.com/store/layuiQuietBlog/">layUI官方商城</a>&nbsp;购买（已下线），再根据自己的需求进行加工</p>
+        <p><b>文章：</b>所有文章均为原创！如需转载，请注明原帖链接</p>
+    </div>
+</div>
+<th:block th:insert="layout :: public_script">
+</th:block>
+<th:block th:insert="about/public_type_page :: public_type_script">
+</th:block>
+</body>
+</html>

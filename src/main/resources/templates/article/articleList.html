@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>文章 | 麦克斯仇的博客</title>
+    <meta name="Description" content="麦克斯仇的博客"/>
+    <meta name="Keywords" content="java,程序员,麦克斯仇,博客"/>
+    <th:block th:insert="layout :: public_head">
+    </th:block>
+</head>
+<body>
+<th:block th:insert="layout :: public_page">
+</th:block>
+<div class="main article">
+    <div class="search">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return find()}">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon layui-icon-search"></i>
+                    </button>
+                    <input type="text" name="search" placeholder="开始全文搜索" class="layui-input" th:value="${search}">
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- 搜索不到文章的展示 -->
+    <div class="item" th:if="${page.totalRow == 0}">
+        <div class="item-content">
+            <div class="item_title">
+                <a>暂无内容</a>
+            </div>
+            <p>文章太少了，请减少搜索条件</p>
+        </div>
+    </div>
+    <!-- 文章展示 -->
+    <div class="item" th:each="article,articleStat:${page.list}">
+        <p class="time"><i class="layui-icon layui-icon-date"></i>&nbsp;<span th:text="${#temporals.format(article.createTime, 'yyyy/MM/dd')}">2021/01/01</span>&nbsp;&nbsp;&nbsp;<i class="iconfont icon-zhiding" th:if="${article.top}"></i></p>
+        <div class="item_title"><a th:href="'/article/detail/' + ${article.id}" href="article/detail/1" th:utext="${article.title}">标题</a></div>
+        <p><span th:each="name,nameStat:${article.labelNames.split(',')}"><span class="subtitle" th:text="${name}">Nacos</span>&nbsp;&nbsp;</span></p>
+        <p class="detail" th:utext="${article.text}">文本</p>
+        <p class="praise"><i class="iconfont icon-yanjing"></i><span th:text="${article.view}">105</span></p>
+    </div>
+    <div id="pageButton"></div>
+</div>
+<div class="right-content">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>L A B E L</legend>
+    </fieldset>
+    <div id="labelSel" class="layui-btn-container">
+        <button id="0" class="layui-btn" th:classappend="${labelId == 0} ? 'layui-btn-primary' : ''">ALL</button>
+        <button th:each="label,labelStat:${labelList}" id="1" th:id="${label.id}" class="layui-btn" th:classappend="${label.id eq labelId} ? 'layui-btn-primary' : ''" th:text="${label.name} + '('+ ${label.count} + ')'">Nacos</button>
+    </div>
+</div>
+<th:block th:insert="layout :: public_script">
+</th:block>
+<script>
+    layui.use('laypage', function () {
+        let laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'pageButton',
+            limit: [[${page.pageSize}]],
+            count: [[${page.totalRow}]],
+            curr: [[${page.pageNumber}]],
+            jump: function (obj, first) {
+                //首次不执行
+                if (!first) {
+                    jump("article?labelId=" + $("#labelSel .layui-btn-primary").attr("id") + "&search=" + $("input[name='search']").val() + "&pageNumber=" + obj.curr)
+                }
+            }
+        });
+    });
+
+    /**
+     * 类别
+     */
+    $("#labelSel").children().click(function () {
+        jump("article?labelId=" + $(this).attr("id") + "&search=" + $("input[name='search']").val())
+    })
+
+    /**
+     * 单击搜索按钮的时候调用
+     */
+    $("#searchBtn").click(function () {
+        find();
+    })
+
+    /**
+     * form表单单击回车时调用
+     */
+    function find() {
+        jump("article?labelId=" + $("#labelSel .layui-btn-primary").attr("id") + "&search=" + $("input[name='search']").val())
+        return false;
+    }
+
+    $(function () {
+        let t = $("input[name='search']").val();
+        $("input[name='search']").val("").focus().val(t);
+    })
+</script>
+</body>
+</html>

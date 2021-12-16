@@ -11,7 +11,7 @@
 
     <groupId>com.maxqiu.blog</groupId>
     <artifactId>min-blog</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>3.0.0</version>
 
     <properties>
         <java.version>11</java.version>
@@ -58,15 +58,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <!-- 模板引擎Java8日期格式化 -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+        </dependency>
         <!-- 表单验证 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-        <!-- 定时任务 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
         <!-- 邮件发送 -->
         <dependency>
@@ -123,7 +123,7 @@
     </dependencies>
 
     <build>
-        <finalName>min-blog</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <!-- SpringBoot 默认打包工具 -->
             <plugin>
@@ -155,6 +155,50 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <!-- maven 打包插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <!-- 不打包资源文件 -->
+                    <excludes>
+                        <exclude>static/**</exclude>
+                    </excludes>
+                    <archive>
+                        <manifestEntries>
+                            <!--MANIFEST.MF 中 Class-Path 加入资源文件目录 -->
+                            <Class-Path>./resources/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+            </plugin>
+            <!-- 该插件用于复制指定的资源文件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <!-- 指定资源文件 -->
+                                    <includes>
+                                        <exclude>static/**</exclude>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/resources</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

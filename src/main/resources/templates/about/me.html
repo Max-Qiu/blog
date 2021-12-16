@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>个人简介 | 麦克斯仇的博客</title>
+    <th:block th:insert="layout :: public_head">
+    </th:block>
+</head>
+<body>
+<th:block th:insert="layout :: public_page">
+</th:block>
+<div class="main about me">
+    <th:block th:insert="about/public_type_page :: public_type_tabs">
+    </th:block>
+    <div class="item">
+        <h4 class="title">我的简介</h4>
+        <p>姓名：仇志慧</p>
+        <p>籍贯：江苏&nbsp;&nbsp;盐城</p>
+        <p>邮箱：qzhing@126.com</p>
+        <h4 class="title">我的履历</h4>
+        <p>2020/10&nbsp;-&nbsp;至今<br/>工作：&nbsp;<b>上海凯诘电子商务股份有限公司</b>&nbsp;，JAVA开发工程师</p>
+        <p>2019/03&nbsp;-&nbsp;2020/10<br/>工作：&nbsp;<b>上海澎睿信息技术有限公司</b>&nbsp;，全栈开发工程师</p>
+        <p>2017/03&nbsp;-&nbsp;2019/03<br/>工作：&nbsp;<b>江苏东智技术股份有限公司</b>&nbsp;，JAVA开发工程师</p>
+        <h4 class="title">联系方式（请备注：来源于博客）</h4>
+        <p class="qq-number">QQ：&nbsp;1084052621</p>
+        <span style="color: white;">微信：</span><img class="code" src="/assets/common/img/wxqrcode.png">
+    </div>
+</div>
+<th:block th:insert="layout :: public_script">
+</th:block>
+<th:block th:insert="about/public_type_page :: public_type_script">
+</th:block>
+</body>
+</html>

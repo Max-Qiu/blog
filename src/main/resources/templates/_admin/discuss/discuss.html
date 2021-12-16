@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="discuss(discussList,parentsNickname)">
+    <tr th:each="discuss,discussStat:${discussList}">
+        <td th:text="${discuss.id}">1</td>
+        <td>
+            <span th:style="'margin-left:' + ${discuss.tier * 50} + 'px'"><span th:text="${discuss.nickname}">昵称</span><span th:if="${parentsNickname != null}">&nbsp;<span style="color: red;">回复</span>&nbsp;<span th:text="${parentsNickname}">被回复昵称</span></span></span>
+        </td>
+        <td th:text="${discuss.content}">#(discuss.content)</td>
+        <td><span class="layui-bg-green" th:if="${discuss.check}">是</span><span class="layui-bg-orange" th:if="${!discuss.check}">否</span></td>
+        <td th:text="${#temporals.format(discuss.createTime, 'yyyy/MM/dd HH:mm:ss')}">2021/01/01 12:00:00</td>
+        <th:block th:insert="_admin/discuss/discuss :: discuss(discussList=${discuss.childList},parentsNickname=${discuss.nickname})">
+        </th:block>
+    </tr>
+</th:block>
+</html>

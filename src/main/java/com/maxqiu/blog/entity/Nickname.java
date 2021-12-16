@@ -1,0 +1,43 @@
+package com.maxqiu.blog.entity;
+
+import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * 随机昵称
+ *
+ * @author Max_Qiu
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@TableName("nickname")
+public class Nickname extends Model<Nickname> {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 主键ID
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
+
+    /**
+     * 昵称
+     */
+    @TableField("nickname")
+    private String nickname;
+
+    @Override
+    public Serializable pkVal() {
+        return this.id;
+    }
+}

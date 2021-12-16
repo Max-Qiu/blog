@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
+<div th:fragment="content">
+    <div class="main">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">评论状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="check" value="" title="ALL" checked="checked">
+                    <input type="radio" name="check" value="true" title="已审核">
+                    <input type="radio" name="check" value="false" title="待审核">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="search">查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+        <table class="layui-hide" id="table" lay-filter="table"></table>
+    </div>
+    <!-- 工具栏 -->
+    <script type="text/html" id="tool">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel">删除</button>
+        </div>
+    </script>
+    <!-- 操作 -->
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail">详细</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    </script>
+    <script src="/assets/common/js/layuiTableDefaultOptions.js" type="text/javascript" charset="utf-8"></script>
+</div>
+<script type="text/javascript" th:fragment="pageScript">
+    let table;
+    layui.use(['table', 'form'], function () {
+        table = layui.table;
+        let form = layui.form;
+        form.render();
+        table.set(layuiTableOptions);
+
+        table.render({
+            id: 'table',
+            elem: '#table',
+            url: '/_admin/discuss/page',
+            toolbar: "#tool",
+            cols: [
+                [{
+                    type: 'checkbox'
+                }, {
+                    field: 'id',
+                    hide: 'true'
+                }, {
+                    field: 'articleId',
+                    title: '文章ID',
+                    templet: function (d) {
+                        return '<a style="color: red;text-decoration: underline" target="_blank" href="/article/detail/' + d.articleId + '">' + d.articleId + '</a>';
+                    },
+                    width: 80,
+                    align: 'center'
+                }, {
+                    field: 'nickname',
+                    title: '用户昵称',
+                    width: 250,
+                    align: 'center'
+                }, {
+                    field: 'content',
+                    title: '评论内容'
+                }, {
+                    field: 'check',
+                    title: '审核',
+                    templet: function (d) {
+                        if (d.check) {
+                            return '<span class="layui-bg-green">是</span>'
+                        } else {
+                            return '<span class="layui-bg-orange">否</span>'
+                        }
+                    },
+                    width: 60,
+                    align: 'center'
+                }, {
+                    field: 'createTime',
+                    title: '评论时间',
+                    width: 190,
+                    align: 'center'
+                }, {
+                    title: '操作',
+                    toolbar: '#operation',
+                    width: 130,
+                    align: 'center'
+                }]
+            ]
+        });
+        //监听行工具事件
+        table.on('tool(table)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'detail') {
+                jump("detail?articleId=" + data.articleId);
+            } else if (obj.event === 'del') {
+                discussDel(data.id);
+            }
+        });
+        //监听头工具栏事件
+        table.on('toolbar(table)', function (obj) {
+            if (obj.event === 'batchDel') {
+                let data = table.checkStatus(obj.config.id).data;
+                if (data.length == 0) {
+                    layer.msg('未勾选', {
+                        icon: 2,
+                        shade: 0.3,
+                        time: 1000
+                    });
+                } else {
+                    let discussIds = [];
+                    for (let i = 0; i < data.length; i++) {
+                        discussIds.push(data[i].id)
+                    }
+                    discussDel(discussIds);
+                }
+            }
+        });
+        //监听提交
+        form.on('submit(search)', function (data) {
+            table.reload('table', {
+                where: {
+                    check: data.field.check
+                }
+            })
+            return false;
+        });
+    })
+
+    function discussDel(discussIds) {
+        layer.confirm('确认删除？', {
+            icon: 3,
+            title: '提示'
+        }, function (index) {
+            layer.close(index);
+            layer.load(1);
+            $.post("/_admin/discuss/del?discussIds=" + discussIds, function (flag) {
+                if (flag.code == 0) {
+                    layer.closeAll();
+                    table.reload('table');
+                    layer.msg('操作成功', {
+                        icon: 1,
+                        shade: 0.3,
+                        time: 1000
+                    });
+                } else {
+                    layer.msg('操作失败', {
+                        icon: 2,
+                        shade: 0.3,
+                        time: 1000
+                    });
+                }
+            })
+        });
+    }
+</script>
+</html>

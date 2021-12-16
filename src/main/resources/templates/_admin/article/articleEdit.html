@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
+<div th:fragment="content">
+    <div class="main">
+        <form class="layui-form">
+            <input type="hidden" name="articleId" id="articleId" th:value="${article.id}"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input" style="width: 300px" th:value="${article.title}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" lay-skin="primary" name="labelId" th:each="label,labelStat:${labelList}" th:checked="${hasLabelList.contains(label.id)}" th:value="${label.id}" th:title="${label.name}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div id="editormdDiv">
+                    <textarea th:text="${article.md}"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="submitTemp" class="layui-btn" lay-submit="" lay-filter="submitTemp">保存(Ctrl+S)</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="submitSave">提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" th:fragment="pageScript">
+    layui.use(['form'], function () {
+        let form = layui.form;
+        form.render();
+        //监听提交
+        form.on('submit(submitTemp)', function (data) {
+            articleSub(data.field, 'submitTemp')
+            return false;
+        });
+        form.on('submit(submitSave)', function (data) {
+            articleSub(data.field, 'submitSave')
+            return false;
+        });
+    });
+    let articleEditor;
+    $(function () {
+        let h = $("#container").height() - 200;
+        articleEditor = editormd("editormdDiv", {
+            width: "100%",
+            height: h,
+            toolbarIcons: function () {
+                return ["undo", "redo", "|",
+                    "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+                    "h1", "h2", "h3", "h4", "h5", "h6", "|",
+                    "list-ul", "list-ol", "hr", "|",
+                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
+                    "goto-line", "watch", "preview", "clear", "search", "|",
+                    "help", "info"
+                ]
+            },
+            imageUpload: true,
+            imageUploadURL: "/_admin/article/mdImageUpload",
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp"],
+            path: "/assets/editor.md/lib/",
+            saveHTMLToTextarea: true,
+            disabledKeyMaps: [
+                "Ctrl-E", "F11"
+            ],
+            htmlDecode: 'style,script,iframe',
+            onload: function () {
+                let keyMap = {
+                    "Ctrl-S": function () {
+                        $("#submitTemp").click();
+                    }
+                };
+                this.addKeyMap(keyMap);
+            }
+        });
+    });
+
+    /**
+     * 表单提交
+     */
+    function articleSub(field, mode) {
+        if (field.title == "") {
+            layer.msg('标题不能为空', {
+                icon: 2,
+                time: 1000,
+                anim: 6
+            });
+            return false;
+        }
+        field.labelIds = getCheckBoxValue();
+        if (field.labelIds == "") {
+            layer.msg('标签必选一个', {
+                icon: 2,
+                time: 1000,
+                anim: 6
+            });
+            return false;
+        }
+        if (field.md == "") {
+            layer.msg('内容不能为空', {
+                icon: 2,
+                time: 1000,
+                anim: 6
+            });
+            return false;
+        }
+        $.post("/_admin/article/form", {
+            id: field.articleId,
+            labelIds: field.labelIds,
+            title: field.title,
+            md: articleEditor.getMarkdown(),
+            html: articleEditor.getHTML()
+        }, function (flag) {
+            if (flag.code == 0) {
+                if (mode == 'submitSave') {
+                    layer.msg('保存成功', {
+                        icon: 1,
+                        time: 1000
+                    }, function () {
+                        jump("manager");
+                    });
+                } else {
+                    $("#articleId").val(flag.data);
+                    layer.msg('临时保存成功', {
+                        icon: 1,
+                        time: 1000
+                    });
+                }
+            } else {
+                layer.msg(flag.msg, {
+                    icon: 2,
+                    time: 1000
+                });
+            }
+        })
+    }
+
+    /**
+     * 获取checkbox选中的值
+     */
+    function getCheckBoxValue() {
+        let arr = [];
+        $("input:checkbox[name='labelId']:checked").each(function (i) {
+            arr[i] = $(this).val();
+        });
+        return arr.join(",");
+    }
+</script>
+</html>

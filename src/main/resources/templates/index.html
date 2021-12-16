@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>首页 | 麦克斯仇的博客</title>
+    <meta name="Keywords" content="麦克斯仇的博客"/>
+    <meta name="Description" content="java,程序员,麦克斯仇,博客"/>
+    <th:block th:insert="layout :: public_head">
+    </th:block>
+</head>
+<body>
+<th:block th:insert="layout :: public_page">
+</th:block>
+<div class="main index">
+    <div class="search">
+        <form class="layui-form" onkeydown="if(event.keyCode==13){return find()}">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon layui-icon-search"></i>
+                    </button>
+                    <input type="text" name="search" placeholder="开始全文搜索" class="layui-input">
+                </div>
+            </div>
+        </form>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>置顶与热门</legend>
+    </fieldset>
+    <div class="item" th:each="article,articleStat:${list}">
+        <p class="time"><i class="layui-icon layui-icon-date"></i>&nbsp;<span th:text="${#temporals.format(article.createTime, 'yyyy/MM/dd')}">2021/01/01</span>&nbsp;&nbsp;&nbsp;<i class="iconfont icon-zhiding" th:if="${article.top}"></i></p>
+        <div class="item_title"><a th:href="'/article/detail/' + ${article.id}" href="article/detail/1" th:text="${article.title}">标题</a></div>
+        <p><span th:each="name,nameStat:${article.labelNames.split(',')}"><span class="subtitle" th:text="${name}">Nacos</span>&nbsp;&nbsp;</span></p>
+        <p class="detail" th:utext="${article.text}">文本</p>
+        <p class="praise"><i class="iconfont icon-yanjing"></i><span th:text="${article.view}">105</span></p>
+    </div>
+    <div class="bei-an">
+        <span>&copy;&nbsp;2019-2021&nbsp;maxqiu.com</span><br/>
+        <a target="_blank" href="https://beian.miit.gov.cn">苏ICP备17051071号</a><br/>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32090302000299">
+            <img src="/assets/common/img/beian.png" alt="备案"/>苏公网安备&nbsp;32090302000299号
+        </a>
+    </div>
+    <br/>
+</div>
+<!-- 右侧内容区域 -->
+<div class="right-content">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>L I F E</legend>
+    </fieldset>
+    <div class="layui-progress layui-progress-big" lay-showpercent="true">
+        <em>D</em>
+        <div id="day" class="layui-progress-bar layui-bg-green"></div>
+    </div>
+    <div class="layui-progress layui-progress-big" lay-showpercent="true">
+        <em>W</em>
+        <div id="week" class="layui-progress-bar layui-bg-red"></div>
+    </div>
+    <div class="layui-progress layui-progress-big" lay-showpercent="true">
+        <em>M</em>
+        <div id="month" class="layui-progress-bar layui-bg-blue"></div>
+    </div>
+    <div class="layui-progress layui-progress-big" lay-showpercent="true">
+        <em>Y</em>
+        <div id="year" class="layui-progress-bar"></div>
+    </div>
+</div>
+<th:block th:insert="layout :: public_script">
+</th:block>
+<script type="text/javascript">
+    /**
+     * 单击搜索按钮的时候调用
+     */
+    $("#searchBtn").click(function () {
+        find();
+    })
+
+    /**
+     * form表单单击回车时调用
+     */
+    function find() {
+        jump("article?search=" + $("input[name='search']").val())
+        return false;
+    }
+
+    $(function () {
+        let t = $("input[name='search']").val();
+        $("input[name='search']").val("").focus().val(t);
+        let now = new Date();
+        $("#day").attr("lay-percent", now.getHours() + "/23");
+        let day = now.getDay();
+        if (day == 0) {
+            day = 7;
+        }
+        $("#week").attr("lay-percent", day + "/7");
+        $("#month").attr("lay-percent", now.getDate() + "/" + getDayOfMonth());
+        $("#year").attr("lay-percent", getDayOfYear() + "/" + getLastDayOfYear());
+    })
+
+    function getDayOfMonth() {
+        let day = new Date();
+        // 将日期设置为下月一号
+        day.setDate(1)
+        day.setMonth(day.getMonth() + 1)
+        // 获取本月最后一天
+        day.setDate(0)
+        return day.getDate()
+    }
+
+    function getDayOfYear() {
+        let day = new Date();
+        // 获取本年的第一天
+        day.setMonth(0);
+        day.setDate(1);
+        // 计算差值
+        let dateGap = new Date().getTime() - day.getTime();
+        return Math.ceil(dateGap / (24 * 60 * 60 * 1000)) + 1;
+    }
+
+    function getLastDayOfYear() {
+        let start = new Date();
+        start.setMonth(0);
+        start.setDate(1);
+        let end = new Date();
+        end.setMonth(11);
+        end.setDate(31);
+        let dateGap = end.getTime() - start.getTime();
+        return Math.ceil(dateGap / (24 * 60 * 60 * 1000)) + 1;
+    }
+</script>
+</body>
+</html>

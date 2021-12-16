@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maxqiu.blog.mapper.ArticleMapper">
+    <select id="countShow" resultType="java.lang.Long">
+        SELECT COUNT(`id`)
+        FROM `article`
+        WHERE `show` = 1
+    </select>
+    <select id="countView" resultType="java.lang.Long">
+        SELECT SUM(`view`)
+        FROM `article`
+        WHERE `show` = 1
+    </select>
+    <select id="top" resultType="com.maxqiu.blog.entity.Article">
+        SELECT a.`id`,
+               a.`label_names`,
+               a.`title`,
+               LEFT(a.text, 500) text,
+               a.`view`,
+               a.`top`,
+               a.`create_time`
+        FROM `article` a
+        WHERE a.`show` = 1
+        ORDER BY a.`top` DESC,
+                 a.`view` DESC,
+                 a.`create_time` DESC
+        LIMIT 10
+    </select>
+    <select id="pageQuery" resultType="com.maxqiu.blog.entity.Article">
+        SELECT a.`id`,
+               a.`label_names`,
+               a.`title`,
+               LEFT(a.text, 500) text,
+               a.`view`,
+               a.`top`,
+               a.`create_time`
+        FROM `article` a
+                WHERE a.`show` = 1
+        <if test="labelId != null and labelId != 0">
+            AND FIND_IN_SET(#{labelId}, a.`label_ids`)
+        </if>
+        ORDER BY a.`top` DESC, a.`create_time` DESC
+    </select>
+    <select id="managerPageQuery" resultType="com.maxqiu.blog.entity.Article">
+        SELECT a.`id`,
+               a.`label_names`,
+               a.`title`,
+               a.`view`,
+               a.`top`,
+               a.`show`,
+               a.`create_time`,
+               a.`update_time`
+        FROM `article` a
+        <where>
+            <if test="title != null and title != ''">
+                AND a.`title` LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="labelId != null and labelId != 0">
+                AND FIND_IN_SET(#{labelId}, a.`label_ids`)
+            </if>
+            <if test="top != null">
+                AND a.`top` = #{top}
+            </if>
+            <if test="show != null">
+                AND a.`show` = #{show}
+            </if>
+        </where>
+        ORDER BY a.`id` DESC
+    </select>
+    <update id="addView">
+        UPDATE article
+        SET view = view + 1
+        WHERE id = #{articleId}
+    </update>
+    <update id="flushName">
+        UPDATE article
+        SET label_names=(SELECT GROUP_CONCAT(l.name ORDER BY l.count DESC, l.id)
+                         FROM label l
+                         WHERE FIND_IN_SET(l.id, label_ids))
+    </update>
+</mapper>

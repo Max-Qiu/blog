@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="public_type_tabs">
+    <div class="layui-tab layui-tab-brief">
+        <ul id="tabs" class="layui-tab-title">
+            <li href="/about/web" onclick="jump('web')">网站介绍</li>
+            <li href="/about/history" onclick="jump('history')">更新记录</li>
+            <li href="/about/me" onclick="jump('me')">个人简介</li>
+        </ul>
+    </div>
+</th:block>
+<th:block th:fragment="public_type_script">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let path = window.location.pathname;
+            // 激活样式
+            $('#tabs li[href="' + path + '"]').addClass("layui-this");
+        });
+    </script>
+</th:block>
+</body>
+</html>

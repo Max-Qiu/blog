@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.maxqiu.blog.mapper.LabelMapper">
+    <select id="getLabelNamesByLabelIds" resultType="java.lang.String">
+        SELECT GROUP_CONCAT(l.name) names
+        FROM `label` l
+                WHERE l.`id` IN
+        <foreach collection="labelIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="flushNum">
+        UPDATE label l
+        SET `count` =(
+                SELECT COUNT(a.id)
+                FROM `article` a
+                WHERE FIND_IN_SET(l.id, a.label_ids)
+                  AND `show` = 1)
+    </update>
+</mapper>

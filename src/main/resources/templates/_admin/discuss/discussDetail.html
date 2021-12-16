@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
+<div th:fragment="content">
+    <div class="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>标题：</legend>
+        </fieldset>
+        <blockquote class="layui-elem-quote" th:text="${article.title}">标题</blockquote>
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>评论：</legend>
+        </fieldset>
+        <table lay-filter="discussTable" style="display: none;">
+            <thead>
+            <tr>
+                <th lay-data="{field:'id', hide: 'true'}"></th>
+                <th lay-data="{field:'nickname',width:500}">昵称</th>
+                <th lay-data="{field:'content'}">评论内容</th>
+                <th lay-data="{field:'check',width:90,align:'center'}">是否审核</th>
+                <th lay-data="{field:'createTime',width:180,align:'center'}">评论时间</th>
+                <th lay-data="{width:180,toolbar:'#bar',align:'center'}">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:insert="_admin/discuss/discuss :: discuss(discussList=${discussList},parentsNickname=null)">
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/html" id="bar">
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="detail">审核</a>
+        <a class="layui-btn layui-btn-xs layui-btn-green" lay-event="revert">回复</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    </script>
+    <script src="/assets/common/js/layuiTableDefaultOptions.js" type="text/javascript" charset="utf-8"></script>
+</div>
+<script type="text/javascript" th:fragment="pageScript">
+    layui.use('table', function () {
+        let table = layui.table;
+        table.set(layuiTableOptions);
+        table.init('discussTable', {
+            page: false
+        });
+        //监听行工具事件
+        table.on('tool(discussTable)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'detail') {
+                if ($(data.check).html() == '是') {
+                    layer.confirm('当前已通过，是否屏蔽？</br>若有子回复，则一并屏蔽', function (index) {
+                        changeCheck(index, data.id, false)
+                    });
+                } else if ($(data.check).html() == '否') {
+                    layer.confirm('当前已屏蔽，是否通过？</br>若有父评论，则一并通过', function (index) {
+                        changeCheck(index, data.id, true)
+                    });
+                }
+            } else if (obj.event === 'revert') {
+                let revertNickname = $(data.nickname).html();
+                if (revertNickname.indexOf("&") > 2) {
+                    revertNickname = revertNickname.substr(0, revertNickname.indexOf("&"));
+                }
+                revert(revertNickname, data.id)
+            } else if (obj.event === 'del') {
+                discussDel(data.id);
+            }
+        });
+    });
+
+    function changeCheck(index, discussId, check) {
+        layer.close(index);
+        layer.load(1);
+        $.post("/_admin/discuss/changeCheck?discussId=" + discussId + "&check=" + check, function (flag) {
+            if (flag.code == 0) {
+                layer.closeAll();
+                layer.msg('操作成功', {
+                    icon: 1,
+                    shade: 0.3,
+                    time: 1000
+                }, function () {
+                    jump("detail?articleId=[[${article.id}]]");
+                });
+            } else {
+                layer.closeAll();
+                layer.msg('操作失败', {
+                    icon: 2,
+                    shade: 0.3,
+                    time: 1000
+                });
+            }
+        })
+    }
+
+    function discussDel(discussIds) {
+        layer.confirm('确认删除？', {
+            icon: 3,
+            title: '提示'
+        }, function (index) {
+            layer.close(index);
+            layer.load(1);
+            $.post("/_admin/discuss/del?discussIds=" + discussIds, function (flag) {
+                if (flag.code == 0) {
+                    layer.closeAll();
+                    layer.msg('操作成功', {
+                        icon: 1,
+                        shade: 0.3,
+                        time: 1000
+                    }, function () {
+                        jump("detail?articleId=[[${article.id}]]");
+                    });
+                } else {
+                    layer.msg('操作失败', {
+                        icon: 2,
+                        shade: 0.3,
+                        time: 1000
+                    });
+                }
+            })
+        });
+    }
+
+    function revert(revertNickname, revertId) {
+        layer.prompt({
+            formType: 2,
+            title: '回复：' + revertNickname
+        }, function (text, index) {
+            layer.close(index);
+            layer.load(1);
+            $.post('/_admin/discuss/form', {
+                articleId: '[[${article.id}]]',
+                nickname: '管理员',
+                content: text,
+                revertId: revertId
+            }, function (flag) {
+                if (flag.code == 0) {
+                    layer.closeAll();
+                    layer.msg('回复成功！请审核~', {
+                        icon: 1,
+                        time: 1000
+                    }, function () {
+                        jump("detail?articleId=[[${article.id}]]");
+                    });
+                } else {
+                    layer.closeAll();
+                    layer.msg('回复失败！', {
+                        icon: 2,
+                        time: 1000
+                    });
+                }
+            })
+        });
+    }
+</script>
+</html>

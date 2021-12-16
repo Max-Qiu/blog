@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
+<div th:fragment="content">
+    <div class="main">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="layui-input" style="width: 300px">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">标签</label>
+                    <div class="layui-input-block">
+                        <select name="labelId" lay-search="">
+                            <option value="">直接选择或搜索选择</option>
+                            <option value="1" th:each="label,labelStat:${labelList}" th:value="${label.id}" th:text="${label.name}">Nacos</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">是否置顶</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="top" value="" title="ALL" checked="checked">
+                        <input type="radio" name="top" value="true" title="是">
+                        <input type="radio" name="top" value="false" title="否">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">文章状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="show" value="" title="ALL" checked="checked">
+                        <input type="radio" name="show" value="true" title="展示">
+                        <input type="radio" name="show" value="false" title="下线">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="search">查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+        <table class="layui-hide" id="table" lay-filter="table"></table>
+    </div>
+    <!-- 工具栏 -->
+    <script type="text/html" id="tool">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">新建</button>
+        </div>
+    </script>
+    <!-- 操作 -->
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-xs layui-btn-normal " lay-event="show">预览</a>
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">编辑</a>
+        {{# if(d.top == false){ }}
+        <a class="layui-btn layui-btn-xs layui-btn-green" lay-event="onTop">打开置顶</a>
+        {{# } }}
+        {{# if(d.top == true){ }}
+        <a class="layui-btn layui-btn-xs layui-btn-green" lay-event="offTop">关闭置顶</a>
+        {{# } }}
+        {{# if(d.show == false){ }}
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="online">展示</a>
+        {{# } }}
+        {{# if(d.show == true){ }}
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="offline">下线</a>
+        {{# } }}
+    </script>
+    <script src="/assets/common/js/layuiTableDefaultOptions.js" type="text/javascript" charset="utf-8"></script>
+</div>
+<script type="text/javascript" th:fragment="pageScript">
+    let table;
+    layui.use(['table', 'form'], function () {
+        table = layui.table;
+        let form = layui.form;
+        form.render();
+        table.set(layuiTableOptions);
+        table.render({
+            id: 'table',
+            elem: '#table',
+            url: '/_admin/article/page',
+            toolbar: "#tool",
+            cols: [
+                [{
+                    field: 'id',
+                    hide: 'true'
+                }, {
+                    field: 'title',
+                    title: '标题'
+                }, {
+                    field: 'labelNames',
+                    title: '标签',
+                    width: 250,
+                }, {
+                    field: 'view',
+                    title: '浏览',
+                    width: 80,
+                    align: 'center'
+                }, {
+                    field: 'top',
+                    title: '置顶',
+                    templet: function (d) {
+                        if (d.top) {
+                            return '<span class="layui-bg-green">是</span>'
+                        } else {
+                            return '<span class="layui-bg-orange">否</span>'
+                        }
+                    },
+                    width: 60,
+                    align: 'center'
+                }, {
+                    field: 'show',
+                    title: '状态',
+                    templet: function (d) {
+                        if (d.show) {
+                            return '<span class="layui-bg-green">展示</span>'
+                        } else {
+                            return '<span class="layui-bg-orange">下线</span>'
+                        }
+                    },
+                    width: 60,
+                    align: 'center'
+                }, {
+                    field: 'createTime',
+                    title: '创建日期',
+                    width: 180,
+                    align: 'center'
+                }, {
+                    field: 'updateTime',
+                    title: '修改日期',
+                    width: 180,
+                    align: 'center'
+                }, {
+                    title: '操作',
+                    toolbar: '#operation',
+                    width: 260,
+                    align: 'center'
+                }]
+            ]
+        });
+        //监听行工具事件
+        table.on('tool(table)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'show') {
+                window.open("/article/detail/" + data.id)
+            } else if (obj.event === 'edit') {
+                jump("edit?articleId=" + data.id);
+            } else if (obj.event === 'onTop') {
+                layer.confirm('确认打开置顶？', function (index) {
+                    changeTop(index, data.id, true)
+                });
+            } else if (obj.event === 'offTop') {
+                layer.confirm('确认关闭置顶？', function (index) {
+                    changeTop(index, data.id, false)
+                });
+            } else if (obj.event === 'online') {
+                layer.confirm('确认展示？', function (index) {
+                    changeShow(index, data.id, true)
+                });
+            } else if (obj.event === 'offline') {
+                layer.confirm('确认下线？', function (index) {
+                    changeShow(index, data.id, false)
+                });
+            }
+        });
+        //监听头工具栏事件
+        table.on('toolbar(table)', function (obj) {
+            if (obj.event === 'add') {
+                jump("edit");
+            }
+        });
+        //监听提交
+        form.on('submit(search)', function (data) {
+            table.reload('table', {
+                where: {
+                    title: data.field.title,
+                    labelId: data.field.labelId,
+                    top: data.field.top,
+                    show: data.field.show
+                }
+            })
+            return false;
+        });
+    });
+
+    function changeTop(index, articleId, top) {
+        layer.close(index);
+        layer.load(1);
+        $.post("/_admin/article/changeTop?articleId=" + articleId + "&top=" + top, function (flag) {
+            layer.closeAll();
+            table.reload('table');
+            if (flag.code == 0) {
+                layer.msg('操作成功', {
+                    icon: 1,
+                    shade: 0.3,
+                    time: 1000
+                });
+            } else {
+                layer.msg('操作失败：' + flag.msg, {
+                    icon: 1,
+                    shade: 0.3,
+                    time: 1000
+                });
+            }
+        })
+    }
+
+    function changeShow(index, articleId, show) {
+        layer.close(index);
+        layer.load(1);
+        $.post("/_admin/article/changeShow?articleId=" + articleId + "&show=" + show, function (flag) {
+            layer.closeAll();
+            table.reload('table');
+            if (flag.code == 0) {
+                layer.msg('操作成功', {
+                    icon: 1,
+                    shade: 0.3,
+                    time: 1000
+                });
+            } else {
+                layer.msg('操作失败：' + flag.msg, {
+                    icon: 1,
+                    shade: 0.3,
+                    time: 1000
+                });
+            }
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
+<div th:fragment="content">
+    <div class="main">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" autocomplete="off" placeholder="请输入标题" class="layui-input" style="width: 300px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="search">查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+        <table class="layui-hide" id="table" lay-filter="table"></table>
+    </div>
+    <!-- 工具栏 -->
+    <script type="text/html" id="tool">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">新建</button>
+        </div>
+    </script>
+    <!-- 操作 -->
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit">编辑</a>
+    </script>
+    <script src="/assets/common/js/layuiTableDefaultOptions.js" type="text/javascript" charset="utf-8"></script>
+</div>
+<script type="text/javascript" th:fragment="pageScript">
+    let table;
+    layui.use(['table', 'form'], function () {
+        table = layui.table;
+        let form = layui.form;
+        form.render();
+        table.set(layuiTableOptions);
+        table.render({
+            id: 'table',
+            elem: '#table',
+            url: '/_admin/label/page',
+            toolbar: "#tool",
+            cols: [
+                [{
+                    field: 'id',
+                    hide: 'true'
+                }, {
+                    field: 'name',
+                    title: '名称'
+                }, {
+                    field: 'count',
+                    title: '数量'
+                }, {
+                    title: '操作',
+                    toolbar: '#operation',
+                    width: 80,
+                    align: 'center'
+                }]
+            ]
+        });
+        //监听行工具事件
+        table.on('tool(table)', function (obj) {
+            let data = obj.data;
+            layer.prompt({title: '请修改标签名称：' + data.name, formType: 0}, function (value, index) {
+                edit(index, data.id, value)
+            });
+        });
+        //监听头工具栏事件
+        table.on('toolbar(table)', function (obj) {
+            if (obj.event == "add") {
+                layer.prompt({title: '请输入标签名称', formType: 0}, function (value, index) {
+                    edit(index, null, value)
+                });
+            }
+        });
+        //监听提交
+        form.on('submit(search)', function (data) {
+            table.reload('table', {
+                where: {
+                    name: data.field.name
+                }
+            })
+            return false;
+        });
+    });
+
+    function edit(index, id, name) {
+        layer.close(index);
+        $.post("/_admin/label/form", {
+            id: id,
+            name: name
+        }, function (flag) {
+            if (flag.code == 0) {
+                table.reload('table');
+                layer.msg('保存成功', {
+                    icon: 1,
+                    time: 1000
+                });
+            } else {
+                layer.msg(flag.msg, {
+                    icon: 2,
+                    time: 1000
+                });
+            }
+        })
+    }
+</script>
+</html>

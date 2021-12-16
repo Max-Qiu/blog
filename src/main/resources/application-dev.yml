@@ -1,0 +1,55 @@
+spring:
+  thymeleaf:
+    cache: false
+  web:
+    resources:
+      static-locations: classpath:/static/,file:C:\\min-blog-files\\ # 指定路径，不使用默认的路径设置，并加载外部路径
+  # MySQL
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # 驱动（可以省略，会自动根据url适配）
+    url: jdbc:mysql://mysql:3306/min_blog?useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true # 连接地址
+    username: root # 用户名
+    password: 123 # 密码
+  # Redis
+  redis:
+    host: redis # 地址
+    port: 6379 # 端口
+    username: # 用户名
+    password: 123 # 密码
+    database: 0 # 指定数据库序号
+  # 邮箱设置
+  mail:
+    enable: false
+    host: smtp.mxhichina.com # 邮箱服务器
+    port: 465 # 端口
+    username: xxx@xxx.com # 用户名（发件邮箱账号）
+    password: xxxxxxxx # 密码（发件人邮箱密码）
+    admin-mail: xxx@xxx.com # 管理员收件邮箱（可与发件邮箱相同）
+  elasticsearch:
+    uris: http://elasticsearch:9200 # elasticsearch 连接地址
+# 日志配置
+logging:
+  file:
+    name: ./log/${spring.application.name}.log
+#  level:
+#    org.springframework.data.elasticsearch.client.WIRE: trace # 开启ES请求打印
+## MyBatis
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 日志输出
+# 路径常量
+path:
+  upload-local-path: C:\\min-blog-files\\upload\\ # 文件上传本地绝对路径
+  cdn-path: # 静态文件加速地址
+  host-name: http://127.0.0.1:30001 # sitemap 前置域名
+# ip138 配置
+ip138:
+  enable: false # 是否启用
+  token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # token
+# 七牛云 配置
+qi-niu:
+  oss:
+    enable: false # 是否启用
+    access-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # access
+    secret-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # secret
+    bucket: xxxxxx # bucket

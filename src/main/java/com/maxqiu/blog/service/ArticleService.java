@@ -1,7 +1,6 @@
 package com.maxqiu.blog.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -207,14 +206,8 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         article.setTop(top);
         boolean flag = article.updateById();
         if (flag) {
-            Optional<ArticleEs> optional = articleRepository.findById(articleId);
-            if (optional.isEmpty()) {
-                log.error("文章更新置顶失败（ES）：{}", articleId);
-                return false;
-            }
-            ArticleEs articleEs = optional.get();
-            articleEs.setTop(top);
-            articleRepository.save(articleEs);
+            // 从数据库取出并重新保存数据
+            articleRepository.save(new ArticleEs(getById(articleId)));
         } else {
             log.error("文章更新置顶失败：{}", articleId);
         }
@@ -237,16 +230,10 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         article.setShow(show);
         boolean flag = article.updateById();
         if (flag) {
+            // 刷新标签数量
             labelService.flushNum();
-            // 修改ES中的文章状态
-            Optional<ArticleEs> optional = articleRepository.findById(articleId);
-            if (optional.isEmpty()) {
-                log.error("文章更新显示失败（ES）：{}", articleId);
-                return false;
-            }
-            ArticleEs articleEs = optional.get();
-            articleEs.setShow(show);
-            articleRepository.save(articleEs);
+            // 修改ES中的文章状态，从数据库取出并重新保存数据
+            articleRepository.save(new ArticleEs(getById(articleId)));
         } else {
             log.error("文章更新显示失败：{}", articleId);
         }
@@ -263,15 +250,8 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     public boolean addView(Integer articleId) {
         boolean flag = baseMapper.addView(articleId);
         if (flag) {
-            Optional<ArticleEs> byId = articleRepository.findById(articleId);
-            if (byId.isEmpty()) {
-                log.error("文章新增浏览失败（ES）：{}", articleId);
-                return false;
-            }
-            // 更新ES
-            ArticleEs article = byId.get();
-            article.setView(article.getView() + 1);
-            articleRepository.save(article);
+            // 从数据库取出并重新保存数据
+            articleRepository.save(new ArticleEs(getById(articleId)));
         } else {
             log.error("文章新增浏览失败：{}", articleId);
         }

@@ -11,7 +11,7 @@
 
     <groupId>com.maxqiu.blog</groupId>
     <artifactId>min-blog</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 
     <properties>
         <java.version>11</java.version>

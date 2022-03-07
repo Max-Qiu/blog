@@ -31,6 +31,12 @@ spring:
 logging:
   file:
     name: /log/${spring.application.name}.log
+management:
+  endpoints:
+    web:
+      base-path: /xxxxxx # 指定前置路径（生产环境自定义地址）
+      exposure:
+        include: "logfile" # 仅开启日志
 # 路径常量
 path:
   upload-local-path: /min-blog-files/upload/ # 文件上传本地绝对路径

@@ -184,7 +184,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         }
         if (flag) {
             labelService.flushNum();
-            articleRepository.save(new ArticleEs(article));
+            articleRepository.save(new ArticleEs(getById(article.getId())));
             return article.getId();
         } else {
             log.error("文章保存失败：{}", article);

@@ -66,10 +66,10 @@
         </div>
         <div class="layui-form-item">
             <label class="login-icon layui-icon layui-icon-password"></label>
-            <input type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input">
+            <input id="password" type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input">
         </div>
         <div class="layui-form-item">
-            <button class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login-submit">L O G I N</button>
+            <button id="login-submit" class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login-submit">L O G I N</button>
         </div>
     </div>
 </div>
@@ -115,6 +115,13 @@
                 }
             });
         });
+    });
+
+    $('#password').on('keydown', function (event) {
+        if (event.keyCode == 13) {
+            $("#login-submit").trigger("click");
+            return false
+        }
     });
 </script>
 </body>

@@ -11,14 +11,14 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ResultEnum {
-    // 成功状态码
+    // 操作成功
     SUCCESS(0, "成功"),
-    // 失败状态码
+    // 操作失败
     FAIL(1, "失败"),
     // 参数异常
-    PARAMETER_ERROR(2, "参数异常"),
-
-    ERROR(99, "系统异常"),
+    PARAMETER_ERROR(400, "参数校验异常"),
+    // 服务器异常
+    SERVER_ERROR(500, "未知异常"),
 
     EXIST_LOG(1001, "已存在记录"),
 

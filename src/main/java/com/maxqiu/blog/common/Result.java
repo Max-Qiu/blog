@@ -50,7 +50,9 @@ public class Result<T> {
     }
 
     public static <K> Result<K> fail(K data) {
-        return new Result<>(ResultEnum.FAIL);
+        Result<K> fail = Result.fail();
+        fail.setData(data);
+        return fail;
     }
 
     public static <K> Result<K> error() {

@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * 随机昵称
@@ -20,6 +22,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@Accessors(chain = true)
 @TableName("nickname")
 public class Nickname extends Model<Nickname> {
     private static final long serialVersionUID = 1L;

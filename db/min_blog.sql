@@ -68,7 +68,8 @@ CREATE TABLE `log_article` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `article_id` int unsigned NOT NULL COMMENT '文章ID',
   `cookie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '用户cookie',
-  `user_agent` text COMMENT '浏览器标识',
+  `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '浏览器标识',
+  `referer` varchar(255) DEFAULT NULL COMMENT '来源',
   `ip` bigint unsigned NOT NULL COMMENT '访问者IP（long）',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
@@ -89,9 +90,9 @@ CREATE TABLE `log_login` (
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `nickname` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `nickname` varchar(255) NOT NULL COMMENT '昵称',
+  `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='随机昵称';
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='随机昵称';
 /*!40101 SET character_set_client = @saved_cs_client */;
 INSERT INTO `nickname` VALUES (1,'及时雨-宋江');
 INSERT INTO `nickname` VALUES (2,'玉麒麟-卢俊义');
@@ -205,8 +206,8 @@ INSERT INTO `nickname` VALUES (108,'金毛犬-段景住');
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `username` varchar(255) NOT NULL COMMENT '用户名',
-  `password` varchar(255) NOT NULL COMMENT '密码',
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE

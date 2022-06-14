@@ -12,6 +12,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * 登录日志
@@ -21,6 +23,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@Accessors(chain = true)
 @TableName("log_login")
 public class LogLogin extends Model<LogLogin> {
     private static final long serialVersionUID = 1L;

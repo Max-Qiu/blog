@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * 文章
@@ -23,6 +24,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
+@Accessors(chain = true)
 @TableName("article")
 public class Article extends Model<Article> {
     private static final long serialVersionUID = 1L;

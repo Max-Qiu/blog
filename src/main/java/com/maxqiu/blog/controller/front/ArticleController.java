@@ -3,8 +3,10 @@ package com.maxqiu.blog.controller.front;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,6 @@ import com.maxqiu.blog.entity.Article;
 import com.maxqiu.blog.entity.ArticleEs;
 import com.maxqiu.blog.entity.IpInfo;
 import com.maxqiu.blog.entity.Label;
-import com.maxqiu.blog.enums.ResultEnum;
 import com.maxqiu.blog.pojo.vo.ArticleVO;
 import com.maxqiu.blog.pojo.vo.PageResultVO;
 import com.maxqiu.blog.request.DiscussFromRequest;
@@ -86,8 +87,8 @@ public class ArticleController {
     public String page(Model model, FrontArticleSearchRequest request) {
         PageResultVO<ArticleVO> resultVO;
         if (StringUtils.hasText(request.getSearch())) {
-            SearchHits<ArticleEs> searchHits = articleService.search(request.getPageNumber(), request.getPageSize(),
-                request.getLabelId(), request.getSearch());
+            SearchHits<ArticleEs> searchHits =
+                articleService.search(request.getPageNumber(), request.getPageSize(), request.getLabelId(), request.getSearch());
             List<SearchHit<ArticleEs>> searchHitList = searchHits.getSearchHits();
             List<ArticleVO> collect = searchHitList.stream().map(item -> {
                 ArticleEs article = item.getContent();
@@ -113,11 +114,9 @@ public class ArticleController {
                 }
                 return vo;
             }).collect(Collectors.toList());
-            resultVO = new PageResultVO<>(collect, request.getPageNumber().longValue(),
-                request.getPageSize().longValue(), searchHits.getTotalHits());
+            resultVO = new PageResultVO<>(collect, request.getPageNumber().longValue(), request.getPageSize().longValue(), searchHits.getTotalHits());
         } else {
-            Page<Article> page =
-                articleService.pageQuery(request.getPageNumber(), request.getPageSize(), request.getLabelId());
+            Page<Article> page = articleService.pageQuery(request.getPageNumber(), request.getPageSize(), request.getLabelId());
             List<ArticleVO> collect = page.getRecords().stream().map(ArticleVO::new).collect(Collectors.toList());
             resultVO = new PageResultVO<>(collect, page.getCurrent(), page.getSize(), page.getTotal());
         }
@@ -143,38 +142,33 @@ public class ArticleController {
      *            文章ID
      */
     @GetMapping("/detail/{articleId}")
-    public String detail(Model model, @CookieValue(value = "nickname", defaultValue = "") String nickname,
-        @CookieValue(value = "mark", defaultValue = "") String mark, HttpSession session,
-        HttpServletResponse servletResponse, @PathVariable Integer articleId) {
-        // 获取文章详细内容
+    public String detail(Model model, @RequestHeader("user-agent") String userAgent,
+        @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "nickname", defaultValue = "") String nickname,
+        @CookieValue(value = "mark", defaultValue = "") String mark, @CookieValue(value = "admin", defaultValue = "") String admin,
+        HttpSession session, HttpServletRequest servletRequest, HttpServletResponse servletResponse, @PathVariable Integer articleId) {
+        // === 获取文章详细内容，并判断文章状态 ===
         Article article = articleService.getById(articleId);
         // 文章不存在，返回404
         if (article == null) {
             servletResponse.setStatus(404);
             return null;
         }
-
-        // 是否可看与管理员预览判断
-        boolean canView = true;
+        // 文章是否可以查看
         if (!article.getShow()) {
             // 文章状态时隐藏时，获取当前用户
             Integer user = (Integer)session.getAttribute(SystemConstant.USER_ID_IN_SESSION_KEY);
-            // 如果当前用户为空，或者当前用户不是管理员，则不可看
+            // 如果当前用户为空，或者当前用户不是管理员，则返回404
             if (user == null || user != 1) {
-                canView = false;
+                servletResponse.setStatus(404);
+                return null;
             }
         }
-        if (!canView) {
-            servletResponse.setStatus(404);
-            return null;
-        }
-
         model.addAttribute("article", article);
 
-        // 获取评论内容
+        // === 获取评论内容 ===
         model.addAttribute("discussList", discussService.list(articleId, false));
 
-        // 设置昵称
+        // === 设置昵称 ===
         if (ObjectUtils.isEmpty(nickname)) {
             nickname = (String)session.getAttribute("nickname");
             if (ObjectUtils.isEmpty(nickname)) {
@@ -193,7 +187,7 @@ public class ArticleController {
         }
         model.addAttribute("nickname", nickname);
 
-        // 设置用户标识
+        // === 设置用户标识 ===
         if (ObjectUtils.isEmpty(mark)) {
             mark = (String)session.getAttribute("mark");
             if (ObjectUtils.isEmpty(mark)) {
@@ -210,49 +204,39 @@ public class ArticleController {
             }
         }
 
-        return "article/articleDetail";
-    }
+        // === 记录访问日志 ===
+        // 1. 非管理员才记录
+        if (!"true".equals(admin)) {
+            // 2. cookie 不存在才记录
+            Optional<Cookie> optional = servletRequest.getCookies() == null ? Optional.empty()
+                : Arrays.stream(servletRequest.getCookies()).filter(e -> ("view" + articleId).equals(e.getName())).findFirst();
+            if (optional.isEmpty()) {
+                // 3. 不是爬虫才记录
+                if (!ipUtil.isSpider(userAgent)) {
+                    // 获取用户IP
+                    String ipStr = ipUtil.getIpAddress(servletRequest);
+                    /// 4. 不是云服务器访问才记录
+                    IpInfo ipInfo = ipInfoService.getByIpStr(ipStr);
+                    if (ipInfo != null && !ipUtil.operatorIsCloud(ipInfo.getOperator())) {
+                        // 查询是否已存在记录
+                        boolean hasLog = logArticleService.checkHasLog(articleId, mark);
+                        // 5. 不存浏览记录
+                        if (!hasLog) {
+                            // 添加浏览量
+                            articleService.addView(articleId);
+                            // 添加日志
+                            logArticleService.add(articleId, mark, referer, userAgent, ipStr);
+                        }
+                        Cookie cookie = new Cookie("view" + articleId, "" + articleId);
+                        cookie.setMaxAge(SystemConstant.COOKIE_AGE);
+                        cookie.setPath("/");
+                        servletResponse.addCookie(cookie);
+                    }
+                }
+            }
+        }
 
-    /**
-     * 添加浏览量
-     *
-     * @param articleId
-     *            文章ID
-     */
-    @PostMapping("addView/{articleId}")
-    @ResponseBody
-    public Result<Integer> addView(@RequestHeader("User-Agent") String userAgent, HttpServletRequest servletRequest,
-        HttpSession session, @PathVariable Integer articleId) {
-        // 判断SESSION中的用户昵称和用户标识
-        String mark = (String)session.getAttribute("mark");
-        String nickname = (String)session.getAttribute("nickname");
-        if (ObjectUtils.isEmpty(mark) || ObjectUtils.isEmpty(nickname)) {
-            // 有任意一个为空，非正常访问，直接返回
-            return Result.error();
-        }
-        // 判断用户标识
-        if (ipUtil.isSpider(userAgent)) {
-            return Result.error();
-        }
-        // 获取用户IP
-        String ipAddress = ipUtil.getIpAddress(servletRequest);
-        /// 检查是否为云服务器访问
-        IpInfo ipInfo = ipInfoService.getByIpStr(ipAddress);
-        if (ipInfo != null && ipUtil.operatorIsCloud(ipInfo.getOperator())) {
-            return Result.error();
-        }
-        // 特殊情况，用户标识存在，且已访问过
-        boolean hasLog = logArticleService.checkHasLog(articleId, mark);
-        if (hasLog) {
-            return Result.other(ResultEnum.EXIST_LOG);
-        }
-        // 添加浏览量
-        boolean flag = articleService.addView(articleId);
-        if (flag) {
-            // 添加日志
-            logArticleService.add(articleId, mark, userAgent, ipAddress);
-        }
-        return Result.byFlag(flag);
+        return "article/articleDetail";
     }
 
     /**
@@ -262,7 +246,6 @@ public class ArticleController {
     @ResponseBody
     public Result<String> addDiscuss(@Validated DiscussFromRequest request) {
         emailService.sendRemindToAdmin(request.getArticleId(), request.getContent());
-        return Result.byFlag(discussService.form(request.getArticleId(), request.getNickname(), request.getContent(),
-            request.getRevertId()));
+        return Result.byFlag(discussService.form(request.getArticleId(), request.getNickname(), request.getContent(), request.getRevertId()));
     }
 }

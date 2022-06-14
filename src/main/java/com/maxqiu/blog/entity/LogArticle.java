@@ -12,6 +12,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * 文章访问日志
@@ -21,6 +23,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@Accessors(chain = true)
 @TableName("log_article")
 public class LogArticle extends Model<LogArticle> {
     private static final long serialVersionUID = 1L;
@@ -48,6 +52,12 @@ public class LogArticle extends Model<LogArticle> {
      */
     @TableField("user_agent")
     private String userAgent;
+
+    /**
+     * 来源
+     */
+    @TableField("referer")
+    private String referer;
 
     /**
      * 访问者IP（long）

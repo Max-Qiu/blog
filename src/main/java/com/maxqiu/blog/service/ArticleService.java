@@ -120,9 +120,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
             // 分页
             .withPageable(PageRequest.of(pageNumber - 1, pageSize))
             // 标题、文本高亮
-            .withHighlightFields(
-                new HighlightBuilder.Field("text").fragmentSize(250).preTags("<span style='color: #e9c984;'>")
-                    .postTags("</span>"),
+            .withHighlightFields(new HighlightBuilder.Field("text").fragmentSize(250).preTags("<span style='color: #e9c984;'>").postTags("</span>"),
                 new HighlightBuilder.Field("title").preTags("<span style='color: #e9c984;'>").postTags("</span>"))
             // 查询条件， 必须要有条件，否则无法高亮
             .withQuery(boolQueryBuilder);
@@ -146,8 +144,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      * @param show
      *            是否展示
      */
-    public Page<Article> managerPageQuery(Integer pageNumber, Integer pageSize, String title, Integer labelId,
-        Boolean top, Boolean show) {
+    public Page<Article> managerPageQuery(Integer pageNumber, Integer pageSize, String title, Integer labelId, Boolean top, Boolean show) {
         return baseMapper.managerPageQuery(new Page<>(pageNumber, pageSize), title, labelId, top, show);
     }
 
@@ -222,8 +219,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      * @param show
      *            展示状态
      */
-    @Caching(evict = {@CacheEvict(key = "'countShow'", beforeInvocation = true),
-        @CacheEvict(key = "'countView'", beforeInvocation = true)})
+    @Caching(evict = {@CacheEvict(key = "'countShow'", beforeInvocation = true), @CacheEvict(key = "'countView'", beforeInvocation = true)})
     public boolean changeShow(Integer articleId, Boolean show) {
         Article article = new Article();
         article.setId(articleId);
@@ -247,7 +243,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      *            文章ID
      */
     @CacheEvict(key = "'countView'")
-    public boolean addView(Integer articleId) {
+    public void addView(Integer articleId) {
         boolean flag = baseMapper.addView(articleId);
         if (flag) {
             // 从数据库取出并重新保存数据
@@ -255,7 +251,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         } else {
             log.error("文章新增浏览失败：{}", articleId);
         }
-        return flag;
     }
 
     /**

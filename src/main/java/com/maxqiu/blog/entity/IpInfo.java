@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * IP地址信息缓存
@@ -20,6 +22,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
+@Accessors(chain = true)
 @TableName("ip_info")
 public class IpInfo extends Model<IpInfo> {
     private static final long serialVersionUID = 1L;

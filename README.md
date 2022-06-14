@@ -28,10 +28,10 @@ Nginx | 1.20.1
 
 框架 | 版本
 ---|---
-SpringBoot | 2.6.7
-Mybatis Plus | 3.5.1
-Fastjson | 1.2.80
-Hutool | 5.7.22
+SpringBoot | 2.6.8
+Mybatis Plus | 3.5.2
+Fastjson | 1.2.83
+Hutool | 5.8.3
 
 # 部署说明
 

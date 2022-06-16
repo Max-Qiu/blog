@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.maxqiu.blog.pojo.dto.Ip138InfoDTO;
 import com.maxqiu.blog.properties.Ip138Properties;
 
@@ -51,8 +51,7 @@ public class Ip138Service {
             int responseCode = conn.getResponseCode();
             if (responseCode == 200) {
                 StringBuilder builder = new StringBuilder();
-                BufferedReader br =
-                    new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
                 for (String s = br.readLine(); s != null; s = br.readLine()) {
                     builder.append(s);
                 }

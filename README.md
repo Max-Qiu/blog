@@ -30,7 +30,7 @@ Nginx | 1.20.1
 ---|---
 SpringBoot | 2.6.8
 Mybatis Plus | 3.5.2
-Fastjson | 1.2.83
+Fastjson2 | 2.0.7
 Hutool | 5.8.3
 
 # 部署说明

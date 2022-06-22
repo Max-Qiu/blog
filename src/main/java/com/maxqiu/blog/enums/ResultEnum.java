@@ -20,6 +20,8 @@ public enum ResultEnum {
     // 服务器异常
     SERVER_ERROR(500, "未知异常"),
 
+    EXIST_LOG(1001, "已存在记录"),
+
     NOT_DIRECTORY(1002, "该目录不是文件夹"),
 
     ;

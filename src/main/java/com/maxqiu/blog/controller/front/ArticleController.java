@@ -3,10 +3,8 @@ package com.maxqiu.blog.controller.front;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,6 +25,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,9 +38,11 @@ import com.maxqiu.blog.entity.Article;
 import com.maxqiu.blog.entity.ArticleEs;
 import com.maxqiu.blog.entity.IpInfo;
 import com.maxqiu.blog.entity.Label;
+import com.maxqiu.blog.enums.ResultEnum;
 import com.maxqiu.blog.pojo.vo.ArticleVO;
 import com.maxqiu.blog.pojo.vo.PageResultVO;
 import com.maxqiu.blog.request.DiscussFromRequest;
+import com.maxqiu.blog.request.FrontAddViewFromRequest;
 import com.maxqiu.blog.request.FrontArticleSearchRequest;
 import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.DiscussService;
@@ -142,10 +143,9 @@ public class ArticleController {
      *            文章ID
      */
     @GetMapping("/detail/{articleId}")
-    public String detail(Model model, @RequestHeader("user-agent") String userAgent,
-        @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "nickname", defaultValue = "") String nickname,
-        @CookieValue(value = "mark", defaultValue = "") String mark, @CookieValue(value = "admin", defaultValue = "") String admin,
-        HttpSession session, HttpServletRequest servletRequest, HttpServletResponse servletResponse, @PathVariable Integer articleId) {
+    public String detail(Model model, @CookieValue(value = "nickname", defaultValue = "") String nickname,
+        @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "mark", defaultValue = "") String mark,
+        HttpSession session, HttpServletResponse servletResponse, @PathVariable Integer articleId) {
         // === 获取文章详细内容，并判断文章状态 ===
         Article article = articleService.getById(articleId);
         // 文章不存在，返回404
@@ -204,39 +204,46 @@ public class ArticleController {
             }
         }
 
-        // === 记录访问日志 ===
-        // 1. 非管理员才记录
-        if (!"true".equals(admin)) {
-            // 2. cookie 不存在才记录
-            Optional<Cookie> optional = servletRequest.getCookies() == null ? Optional.empty()
-                : Arrays.stream(servletRequest.getCookies()).filter(e -> ("view" + articleId).equals(e.getName())).findFirst();
-            if (optional.isEmpty()) {
-                // 3. 不是爬虫才记录
-                if (!ipUtil.isSpider(userAgent)) {
-                    // 获取用户IP
-                    String ipStr = ipUtil.getIpAddress(servletRequest);
-                    /// 4. 不是云服务器访问才记录
-                    IpInfo ipInfo = ipInfoService.getByIpStr(ipStr);
-                    if (ipInfo != null && !ipUtil.operatorIsCloud(ipInfo.getOperator())) {
-                        // 查询是否已存在记录
-                        boolean hasLog = logArticleService.checkHasLog(articleId, mark);
-                        // 5. 不存浏览记录
-                        if (!hasLog) {
-                            // 添加浏览量
-                            articleService.addView(articleId);
-                            // 添加日志
-                            logArticleService.add(articleId, mark, referer, userAgent, ipStr);
-                        }
-                        Cookie cookie = new Cookie("view" + articleId, "" + articleId);
-                        cookie.setMaxAge(SystemConstant.COOKIE_AGE);
-                        cookie.setPath("/");
-                        servletResponse.addCookie(cookie);
-                    }
-                }
-            }
-        }
+        // === 设置来源 ===
+        model.addAttribute("referer", referer);
 
         return "article/articleDetail";
+    }
+
+    /**
+     * 添加浏览量
+     */
+    @PostMapping("addView")
+    @ResponseBody
+    public Result<Integer> addView(@RequestHeader("User-Agent") String userAgent, HttpServletRequest servletRequest, HttpSession session,
+        @RequestBody FrontAddViewFromRequest fromRequest) {
+        // 判断SESSION中的用户昵称和用户标识
+        String mark = (String)session.getAttribute("mark");
+        String nickname = (String)session.getAttribute("nickname");
+        if (ObjectUtils.isEmpty(mark) || ObjectUtils.isEmpty(nickname)) {
+            // 有任意一个为空，非正常访问，直接返回
+            return Result.error();
+        }
+        // 判断用户标识
+        if (ipUtil.isSpider(userAgent)) {
+            return Result.error();
+        }
+        // 获取用户IP
+        String ipStr = ipUtil.getIpAddress(servletRequest);
+        /// 检查是否为云服务器访问
+        IpInfo ipInfo = ipInfoService.getByIpStr(ipStr);
+        if (ipInfo == null || ipUtil.operatorIsCloud(ipInfo.getOperator())) {
+            return Result.error();
+        }
+        // 特殊情况，用户标识存在，且已访问过
+        boolean hasLog = logArticleService.checkHasLog(fromRequest.getArticleId(), mark);
+        if (hasLog) {
+            return Result.other(ResultEnum.EXIST_LOG);
+        }
+        // 添加浏览量
+        articleService.addView(fromRequest.getArticleId());
+        logArticleService.add(fromRequest.getArticleId(), mark, fromRequest.getReferer(), userAgent, ipStr);
+        return Result.success();
     }
 
     /**

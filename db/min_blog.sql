@@ -28,7 +28,7 @@ CREATE TABLE `discuss` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `article_id` int unsigned NOT NULL COMMENT '文章ID',
   `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户昵称',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '评论内容',
   `tier` tinyint unsigned NOT NULL COMMENT '层级',
   `revert_id` int unsigned NOT NULL COMMENT '回复的用户ID',
   `check` tinyint(1) NOT NULL COMMENT '是否审核过的 0否 1是',

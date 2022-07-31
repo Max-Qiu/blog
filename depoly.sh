@@ -1,10 +1,10 @@
 #!/bin/bash
-cd /work/project/min-blog/ || exit
+cd /work/project/blog/ || exit
 git pull
 mvn clean package
 VERSION=$(date "+%Y%m%d")
-docker build -t min-blog:"$VERSION" .
-docker rm -f min-blog
-docker run -d --restart always --name min-blog -v /work/log/min-blog:/log -v /work/min-blog-files/:/min-blog-files --network min-blog-bridge min-blog:"$VERSION"
+docker build -t blog:"$VERSION" .
+docker rm -f blog
+docker run -d --restart always --name blog -v /work/log/blog:/log -v /work/blog-files/:/blog-files --network blog-bridge blog:"$VERSION"
 docker image prune -f
 docker restart nginx

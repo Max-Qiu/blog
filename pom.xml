@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.maxqiu.blog</groupId>
-    <artifactId>min-blog</artifactId>
+    <artifactId>blog</artifactId>
     <version>3.2.0</version>
 
     <properties>

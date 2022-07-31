@@ -17,22 +17,22 @@
 
 特别说明：
 
-- 安装服务前使用`docker network create -d bridge min-blog-bridge`创建网络
-- 安装服务时，所有服务均使用`--network min-blog-bridge`连接到同一网络内
-- `MySQL`需要对外开放端口，用于导入数据等操作
-- `Redis`不需要对外开放，除非是和其他服务不在同一机器
+- 安装服务前使用 `docker network create -d bridge blog-bridge` 创建网络
+- 安装服务时，所有服务均使用 `--network blog-bridge` 连接到同一网络内
+- `MySQL` 需要对外开放端口，用于导入数据等操作
+- `Redis` 不需要对外开放，除非是和其他服务不在同一机器
 
 ## 数据库
 
 MySQL：连接服务端数据库
 
-- 导入源码`db`目录下的`min-blog.sql`
+- 导入源码 `db` 目录下的 `blog.sql`
 - （推荐）为当前项目分配一个单独的用户名密码
 
 ## 创建文件上传目录
 
 ```bash
-mkdir -p /work/min-blog-files/upload
+mkdir -p /work/blog-files/upload
 ```
 
 ## 启动服务
@@ -52,12 +52,13 @@ git clone xxxxxx
 
 ```bash
 # 进入项目目录
-cd min-blog/
+cd blog/
 # 启动容器（包含拉取代码、Maven打包、制作镜像、启动容器。若不需要拉取代码，则修改脚本注释掉）
 ./depoly.sh
 ```
 
-启动之后`docker stats`查看CPU占用，一段时间（一两分钟）后CPU占用回归零点几、一点几；若发现服务有重启的情况，肯定是部分配置错误，使用`docker logs -f min-blog`查看日志排查问题
+启动之后 `docker stats` 查看CPU占用，一段时间（一两分钟）后CPU占用回归零点几、一点几；若发现服务有重启的情况，肯定是部分配置错误，使用 `docker logs -f blog`
+查看日志排查问题
 
 ## 启动Nginx
 
@@ -116,7 +117,7 @@ http {
             return 404;
         }
         location / {
-            proxy_pass http://min-blog:30001/;
+            proxy_pass http://blog:30001/;
             add_header Strict-Transport-Security "max-age=31536000";
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -158,9 +159,9 @@ vim build.sh
 
 ```bash
 #!/bin/bash
-docker build -t min-blog-nginx .
-docker rm -f nginx
-docker run -d --restart always --name nginx --network min-blog-bridge -p 80:80 -p 443:443 min-blog-nginx:latest
+docker build -t blog-nginx .
+docker rm -f blog-nginx
+docker run -d --restart always --name blog-nginx --network blog-bridge -p 80:80 -p 443:443 blog-nginx:latest
 ```
 
 授权

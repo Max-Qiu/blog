@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Max_Qiu
  */
 @Slf4j
-@CacheConfig(cacheNames = "min-blog")
+@CacheConfig(cacheNames = "blog")
 @Service
 public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     @Autowired

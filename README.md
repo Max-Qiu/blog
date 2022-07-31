@@ -4,10 +4,8 @@
 
 源码仓库地址：
 
-- [https://github.com/Max-Qiu/min-blog](https://github.com/Max-Qiu/min-blog)
-- [https://gitee.com/Max-Qiu/min-blog](https://gitee.com/Max-Qiu/min-blog)
-
-PS：微服务版的折腾完了，还是转回单体应用
+- [https://github.com/Max-Qiu/blog](https://github.com/Max-Qiu/blog)
+- [https://gitee.com/Max-Qiu/blog](https://gitee.com/Max-Qiu/blog)
 
 # 技术介绍
 

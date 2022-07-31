@@ -3,11 +3,11 @@ spring:
     cache: false
   web:
     resources:
-      static-locations: classpath:/static/,file:C:\\min-blog-files\\ # 指定路径，不使用默认的路径设置，并加载外部路径
+      static-locations: classpath:/static/,file:C:\\blog-files\\ # 指定路径，不使用默认的路径设置，并加载外部路径
   # MySQL
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # 驱动（可以省略，会自动根据url适配）
-    url: jdbc:mysql://mysql:3306/min_blog?useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true # 连接地址
+    url: jdbc:mysql://mysql:3306/blog?useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true # 连接地址
     username: root # 用户名
     password: 123 # 密码
   # Redis
@@ -48,7 +48,7 @@ management:
     mail:
       enabled: false # 关闭邮件服务健康检查（测试环境未配置邮箱）
 path:
-  upload-local-path: C:\\min-blog-files\\upload\\ # 文件上传本地绝对路径
+  upload-local-path: C:\\blog-files\\upload\\ # 文件上传本地绝对路径
   cdn-path: # 静态文件加速地址
   host-name: http://127.0.0.1:30001 # sitemap 前置域名
 # ip138 配置

@@ -15,8 +15,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableCaching
 @MapperScan("com.maxqiu.blog.mapper")
 @SpringBootApplication
-public class MinBlogApplication {
+public class BlogApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MinBlogApplication.class, args);
+        SpringApplication.run(BlogApplication.class, args);
     }
 }

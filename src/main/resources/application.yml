@@ -6,7 +6,7 @@ server:
       min-spare: 2 # 最小活跃线程数
 spring:
   application:
-    name: min-blog # 项目名称
+    name: blog # 项目名称
   profiles:
     active: dev # 当前开发环境
   jackson:

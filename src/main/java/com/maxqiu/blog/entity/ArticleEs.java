@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(indexName = "min_blog_article")
+@Document(indexName = "blog_article")
 @Setting(shards = 1, replicas = 0)
 public class ArticleEs {
     private static final long serialVersionUID = 1L;

@@ -3,7 +3,7 @@
 ## 基础环境搭建
 
 - [CentOS7配置jdk](https://maxqiu.com/article/detail/4)（需要安装JDK11）
-- [CentOS7配置Maven3.6.3](https://maxqiu.com/article/detail/6)
+- [CentOS7配置Maven3.8.6](https://maxqiu.com/article/detail/6)
 - [CentOS7使用源码包编译安装Git](https://maxqiu.com/article/detail/104)
 - [CentOS7安装docker-ce（阿里源）](https://maxqiu.com/article/detail/24)
 
@@ -142,7 +142,7 @@ vim Dockerfile
 内容如下
 
 ```
-FROM nginx:1.20.1
+FROM nginx:1.23.1
 ENV TZ=Asia/Shanghai
 COPY nginx.conf /etc/nginx/nginx.conf
 ```

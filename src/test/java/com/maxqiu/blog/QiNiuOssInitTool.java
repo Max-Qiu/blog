@@ -24,7 +24,7 @@ public class QiNiuOssInitTool {
      */
     @Test
     void flushStatic() {
-        String staticPath = System.getProperty("user.dir") + "\\..\\max-blog-web\\src\\main\\resources\\static";
+        String staticPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static";
         File assets = new File(staticPath + "\\assets");
         Map<String, Integer> result = qiNiuOssService.uploadDirectory("assets", assets);
         System.out.println("上传成功：" + result.get("success"));

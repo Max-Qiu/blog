@@ -14,21 +14,21 @@
 软件 | 版本
 ---|---
 CentOS | 7.6
-Docker | 20.10.7
+Docker | 20.10.17
 JDK | 11
-Maven | 3.6.3
-MySQL | 8.0.25
-Redis | 6.2.4
-ElasticSearch | 7.15.2
-Nginx | 1.20.1
+Maven | 3.8.6
+MySQL | 8.0.30
+Redis | 6.2.6
+ElasticSearch | 7.17.4
+Nginx | 1.23.1
 
 ## 框架版本
 
 框架 | 版本
 ---|---
-SpringBoot | 2.6.8
+SpringBoot | 2.7.3
 Mybatis Plus | 3.5.2
-Fastjson2 | 2.0.7
+Fastjson2 | 2.0.11
 Hutool | 5.8.3
 
 # 部署说明

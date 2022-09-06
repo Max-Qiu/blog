@@ -1,9 +1,9 @@
 package com.maxqiu.blog.controller.admin;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,21 +24,20 @@ import com.maxqiu.blog.utils.IpUtil;
 @RestController
 @RequestMapping("_admin/user")
 public class AdminUserController {
-    @Autowired
+    @Resource
     private UserService userService;
 
-    @Autowired
+    @Resource
     private LogLoginService logLoginService;
 
-    @Autowired
+    @Resource
     private IpUtil ipUtil;
 
     /**
      * 登录（管理员）
      */
     @PostMapping("login")
-    public Result<String> login(HttpServletRequest servletRequest, HttpSession session,
-        @Validated AdminLoginPageRequest request) {
+    public Result<String> login(HttpServletRequest servletRequest, HttpSession session, @Validated AdminLoginPageRequest request) {
         Integer userId = userService.managerLogin(request.getUsername(), request.getPassword());
         if (userId == null) {
             return Result.fail();

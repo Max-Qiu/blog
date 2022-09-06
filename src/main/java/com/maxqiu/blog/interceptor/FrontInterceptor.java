@@ -1,9 +1,9 @@
 package com.maxqiu.blog.interceptor;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,12 +17,11 @@ import com.maxqiu.blog.service.ArticleService;
  */
 @Component
 public class FrontInterceptor implements HandlerInterceptor {
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-        ModelAndView modelAndView) {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (modelAndView != null) {
             modelAndView.addObject("countShow", articleService.countShow());
             modelAndView.addObject("countView", articleService.countView());

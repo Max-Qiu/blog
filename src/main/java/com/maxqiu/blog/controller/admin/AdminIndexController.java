@@ -2,7 +2,8 @@ package com.maxqiu.blog.controller.admin;
 
 import java.io.File;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,16 +23,16 @@ import com.maxqiu.blog.utils.SitemapUtil;
 @RestController
 @RequestMapping("_admin")
 public class AdminIndexController {
-    @Autowired
+    @Resource
     private SitemapUtil sitemapUtil;
 
-    @Autowired
+    @Resource
     private PathProperties pathProperties;
 
-    @Autowired
+    @Resource
     private QiNiuOssService qiNiuOssService;
 
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
     /**

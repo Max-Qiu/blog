@@ -3,7 +3,8 @@ package com.maxqiu.blog.service;
 import java.time.LocalDate;
 import java.time.Period;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,7 +21,7 @@ import cn.hutool.core.net.NetUtil;
  */
 @Service
 public class IpInfoService extends ServiceImpl<IpInfoMapper, IpInfo> {
-    @Autowired
+    @Resource
     private Ip138Service ip138Service;
 
     /**

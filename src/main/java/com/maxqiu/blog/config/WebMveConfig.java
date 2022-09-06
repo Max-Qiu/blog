@@ -1,6 +1,7 @@
 package com.maxqiu.blog.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -16,16 +17,15 @@ import com.maxqiu.blog.interceptor.FrontInterceptor;
  */
 @Configuration
 public class WebMveConfig implements WebMvcConfigurer {
-    @Autowired
+    @Resource
     private FrontInterceptor frontInterceptor;
 
-    @Autowired
+    @Resource
     private AdminInterceptor adminInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] frontExcludes =
-            new String[] {"/_admin/**", "/assets/**", "/favicon.ico", "/article/addView/**", "/article/addDiscuss/**"};
+        String[] frontExcludes = new String[] {"/_admin/**", "/assets/**", "/favicon.ico", "/article/addView/**", "/article/addDiscuss/**"};
         registry.addInterceptor(frontInterceptor).addPathPatterns("/**").excludePathPatterns(frontExcludes);
 
         String[] adminExcludes = new String[] {"/_admin/login", "/_admin/user/login"};

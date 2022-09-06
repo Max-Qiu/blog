@@ -1,6 +1,7 @@
 package com.maxqiu.blog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class EmailService {
-    @Autowired
+    @Resource
     private EmailUtil emailUtil;
 
-    @Autowired
+    @Resource
     private EmailProperties emailProperties;
 
     /**
@@ -32,8 +33,7 @@ public class EmailService {
     @Async
     public void sendRemindToAdmin(Integer articleId, String content) {
         if (emailProperties.getEnable()) {
-            boolean flag =
-                emailUtil.simpleMailMessage(emailProperties.getAdminMail(), "文章ID：" + articleId + " 被评论了", content);
+            boolean flag = emailUtil.simpleMailMessage(emailProperties.getAdminMail(), "文章ID：" + articleId + " 被评论了", content);
             if (!flag) {
                 log.error("邮件发送失败：{} + {}", articleId, content);
             }

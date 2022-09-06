@@ -7,7 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -23,7 +24,7 @@ import com.maxqiu.blog.properties.Ip138Properties;
  */
 @Service
 public class Ip138Service {
-    @Autowired
+    @Resource
     private Ip138Properties ip138Properties;
 
     /**

@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Controller;
@@ -60,25 +60,25 @@ import com.maxqiu.blog.utils.IpUtil;
 @Controller
 @RequestMapping("article")
 public class ArticleController {
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
-    @Autowired
+    @Resource
     private DiscussService discussService;
 
-    @Autowired
+    @Resource
     private LabelService labelService;
 
-    @Autowired
+    @Resource
     private LogArticleService logArticleService;
 
-    @Autowired
+    @Resource
     private IpInfoService ipInfoService;
 
-    @Autowired
+    @Resource
     private IpUtil ipUtil;
 
-    @Autowired
+    @Resource
     private EmailService emailService;
 
     /**

@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -31,10 +32,10 @@ import com.maxqiu.blog.service.DiscussService;
 @Controller
 @RequestMapping("_admin/discuss")
 public class AdminDiscussController {
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
-    @Autowired
+    @Resource
     private DiscussService discussService;
 
     /**
@@ -43,8 +44,7 @@ public class AdminDiscussController {
     @PostMapping("page")
     @ResponseBody
     public LayuiPageVO<DiscussVO> page(AdminDiscussPageRequest request) {
-        Page<Discuss> discussPage =
-            discussService.managerPage(request.getPageNumber(), request.getPageSize(), request.getCheck());
+        Page<Discuss> discussPage = discussService.managerPage(request.getPageNumber(), request.getPageSize(), request.getCheck());
         List<DiscussVO> voList = discussPage.getRecords().stream().map(DiscussVO::new).collect(Collectors.toList());
         return new LayuiPageVO<>(discussPage.getTotal(), voList);
     }
@@ -68,8 +68,7 @@ public class AdminDiscussController {
     @PostMapping("form")
     @ResponseBody
     public Result<String> form(@Validated DiscussFromRequest request) {
-        return Result.byFlag(discussService.form(request.getArticleId(), request.getNickname(), request.getContent(),
-            request.getRevertId()));
+        return Result.byFlag(discussService.form(request.getArticleId(), request.getNickname(), request.getContent(), request.getRevertId()));
     }
 
     /**
@@ -81,8 +80,7 @@ public class AdminDiscussController {
     @PostMapping("del")
     @ResponseBody
     public Result<String> discussDel(String discussIds) {
-        List<Integer> discussIdList =
-            Arrays.stream(discussIds.split(",")).map(Integer::parseInt).collect(Collectors.toList());
+        List<Integer> discussIdList = Arrays.stream(discussIds.split(",")).map(Integer::parseInt).collect(Collectors.toList());
         discussService.deleteByIds(discussIdList);
         return Result.success();
     }

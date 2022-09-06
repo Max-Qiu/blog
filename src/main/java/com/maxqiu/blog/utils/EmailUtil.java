@@ -3,7 +3,8 @@ package com.maxqiu.blog.utils;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,7 +21,7 @@ public class EmailUtil {
     /**
      * 邮件发送
      */
-    @Autowired
+    @Resource
     private JavaMailSender mailSender;
 
     /**
@@ -43,8 +44,7 @@ public class EmailUtil {
      * @param text
      *            内容
      */
-    public boolean simpleMailMessage(List<String> toList, List<String> ccList, List<String> bccList, String subject,
-        String text) {
+    public boolean simpleMailMessage(List<String> toList, List<String> ccList, List<String> bccList, String subject, String text) {
         // 1. 创建一个简单消息
         SimpleMailMessage message = new SimpleMailMessage();
         // 2. 设置

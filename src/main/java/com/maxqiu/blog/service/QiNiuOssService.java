@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 
 import com.maxqiu.blog.properties.QiNiuOssProperties;
@@ -24,7 +25,7 @@ import com.qiniu.util.Auth;
 public class QiNiuOssService {
     private static final Configuration CONFIGURATION = new Configuration(Region.huadong());
 
-    @Autowired
+    @Resource
     private QiNiuOssProperties ossProperties;
 
     /**

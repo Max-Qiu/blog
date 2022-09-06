@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -41,16 +42,16 @@ import com.maxqiu.blog.service.QiNiuOssService;
 @Controller
 @RequestMapping("_admin/article")
 public class AdminArticleController {
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
-    @Autowired
+    @Resource
     private LabelService labelService;
 
-    @Autowired
+    @Resource
     private PathProperties pathProperties;
 
-    @Autowired
+    @Resource
     private QiNiuOssService qiNiuOssService;
 
     /**
@@ -68,8 +69,8 @@ public class AdminArticleController {
     @PostMapping("page")
     @ResponseBody
     public LayuiPageVO<ArticleVO> page(AdminArticlePageRequest request) {
-        Page<Article> page = articleService.managerPageQuery(request.getPageNumber(), request.getPageSize(),
-            request.getTitle(), request.getLabelId(), request.getTop(), request.getShow());
+        Page<Article> page = articleService.managerPageQuery(request.getPageNumber(), request.getPageSize(), request.getTitle(), request.getLabelId(),
+            request.getTop(), request.getShow());
         List<ArticleVO> voList = page.getRecords().stream().map(ArticleVO::new).collect(Collectors.toList());
         return new LayuiPageVO<>(page.getTotal(), voList);
     }
@@ -86,8 +87,7 @@ public class AdminArticleController {
         // 如果ID不存在，则为新建
         if (articleId != null) {
             Article article = articleService.getById(articleId);
-            List<Integer> hasLabelList =
-                Arrays.stream(article.getLabelIds().split(",")).map(Integer::parseInt).collect(Collectors.toList());
+            List<Integer> hasLabelList = Arrays.stream(article.getLabelIds().split(",")).map(Integer::parseInt).collect(Collectors.toList());
             model.addAttribute("hasLabelList", hasLabelList);
             model.addAttribute("article", article);
         } else {
@@ -103,8 +103,7 @@ public class AdminArticleController {
     @PostMapping("form")
     @ResponseBody
     public Result<Integer> articleEditForm(@Validated AdminArticleFromRequest request) {
-        Integer id = articleService.form(request.getId(), request.getLabelIds(), request.getTitle(), request.getMd(),
-            request.getHtml());
+        Integer id = articleService.form(request.getId(), request.getLabelIds(), request.getTitle(), request.getMd(), request.getHtml());
         if (id != null) {
             return Result.success(id);
         } else {

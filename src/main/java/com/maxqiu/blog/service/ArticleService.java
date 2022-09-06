@@ -3,10 +3,11 @@ package com.maxqiu.blog.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,13 +40,13 @@ import lombok.extern.slf4j.Slf4j;
 @CacheConfig(cacheNames = "blog")
 @Service
 public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
-    @Autowired
+    @Resource
     private LabelService labelService;
 
-    @Autowired
+    @Resource
     private ArticleRepository articleRepository;
 
-    @Autowired
+    @Resource
     private ElasticsearchRestTemplate template;
 
     /**

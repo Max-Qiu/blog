@@ -1,6 +1,7 @@
 package com.maxqiu.blog.controller.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,10 @@ import com.maxqiu.blog.service.LabelService;
 @RestController
 @RequestMapping("_admin/label")
 public class AdminLabelController {
-    @Autowired
+    @Resource
     private LabelService labelService;
 
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
     /**

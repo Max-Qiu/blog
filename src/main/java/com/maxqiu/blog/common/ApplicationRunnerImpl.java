@@ -2,7 +2,8 @@ package com.maxqiu.blog.common;
 
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -22,13 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class ApplicationRunnerImpl implements ApplicationRunner {
-    @Autowired
+    @Resource
     private SitemapUtil sitemapUtil;
 
-    @Autowired
+    @Resource
     private NicknameService nicknameService;
 
-    @Autowired
+    @Resource
     private ArticleService articleService;
 
     @Override
@@ -41,8 +42,7 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         }
 
         // 初始化随机用户昵称
-        UserConstant.nicknameList =
-            nicknameService.list().stream().map(Nickname::getNickname).collect(Collectors.toList());
+        UserConstant.nicknameList = nicknameService.list().stream().map(Nickname::getNickname).collect(Collectors.toList());
 
         // 将文章的文本数据重新导入ES库
         articleService.flushAllToEs();

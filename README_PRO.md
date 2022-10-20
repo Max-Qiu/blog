@@ -57,52 +57,41 @@ cd blog/
 ./depoly.sh
 ```
 
-启动之后 `docker stats` 查看CPU占用，一段时间（一两分钟）后CPU占用回归零点几、一点几；若发现服务有重启的情况，肯定是部分配置错误，使用 `docker logs -f blog`
-查看日志排查问题
+启动之后 `docker stats` 查看CPU占用，一段时间（一两分钟）后CPU占用回归零点几、一点几；若发现服务有重启的情况，肯定是部分配置错误，使用 `docker logs -f blog` 查看日志排查问题
 
-## 启动Nginx
+## 搭建 Nginx
 
-创建Nginx目录
+1. 按照如下教程安装 `Nginx` 服务：[CentOS7安装Nginx（源码包编译）](https://maxqiu.com/article/detail/15)
+2. 修改 `Nginx` 配置文件，内容大致如下，修改完成后重启：
 
-```bash
-mkdir -p /work/nginx
-cd /work/nginx/
-```
+```nginx
+worker_processes  auto;
 
-### 配置文件
-
-创建Nginx配置文件
-
-```bash
-vim nginx.conf
-```
-
-内容如下：
-
-```
-user  nginx;
-worker_processes  1;
-error_log  /var/log/nginx/error.log warn;
-pid        /var/run/nginx.pid;
 events {
     worker_connections  1024;
 }
+
 http {
-    include       /etc/nginx/mime.types;
+    include       mime.types;
     default_type  application/octet-stream;
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" "$http_x_forwarded_for"';
-    access_log  /var/log/nginx/access.log  main;
+    access_log  logs/access.log  main;
+
     sendfile        on;
-    #tcp_nopush     on;
+
     keepalive_timeout  65;
+
+    # 启用gzip
     gzip  on;
     gzip_min_length 1k;
     gzip_buffers 4 16k;
     gzip_comp_level 3;
     gzip_types text/plain text/css application/xml application/javascript application/x-javascript text/javascript;
+
     client_max_body_size 20m;
+
     server {
         listen 80;
         # 拦截乱七八糟的请求
@@ -117,7 +106,7 @@ http {
             return 404;
         }
         location / {
-            proxy_pass http://blog:30001/;
+            proxy_pass http://127.0.0.1:30001/;
             add_header Strict-Transport-Security "max-age=31536000";
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -129,51 +118,6 @@ http {
         }
     }
 }
-```
-
-### Dockerfile
-
-新建Dockerfile
-
-```bash
-vim Dockerfile
-```
-
-内容如下
-
-```
-FROM nginx:1.23.1
-ENV TZ=Asia/Shanghai
-COPY nginx.conf /etc/nginx/nginx.conf
-```
-
-### 启动脚本
-
-新建启动脚本
-
-```
-vim build.sh 
-```
-
-内容如下
-
-```bash
-#!/bin/bash
-docker build -t blog-nginx .
-docker rm -f blog-nginx
-docker run -d --restart always --name blog-nginx --network blog-bridge -p 80:80 -p 443:443 blog-nginx:latest
-```
-
-授权
-
-```bash
-chmod 744 build.sh
-```
-
-### 执行
-
-```bash
-./build.sh 
 ```
 
 ## 访问测试

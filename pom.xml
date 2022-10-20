@@ -151,6 +151,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!-- 使用 PropertiesLauncher 模式 -->
+                    <layout>ZIP</layout>
                     <!--打包时去除第三方依赖-->
                     <includes>
                         <include>
@@ -192,16 +194,6 @@
                             <!--MANIFEST.MF 中 Class-Path 加入资源文件目录 -->
                             <Class-Path>./resources/</Class-Path>
                         </manifestEntries>
-                        <!-- 生成的jar中，不要包含pom.xml和pom.properties这两个文件 -->
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
-                            <!-- 是否要把第三方jar加入到类构建路径 -->
-                            <addClasspath>true</addClasspath>
-                            <!-- 外部依赖jar包的最终位置 -->
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <!--强制可以使用快照版本-->
-                            <useUniqueVersions>true</useUniqueVersions>
-                        </manifest>
                     </archive>
                 </configuration>
             </plugin>
@@ -231,7 +223,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--拷贝第三方依赖文件到指定目录-->
+            <!-- 拷贝第三方依赖文件到指定目录，启动时，使用 java -Dloader.path=./lib -jar xxx.jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -243,11 +235,12 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <!-- target/lib是依赖jar包的输出目录 -->
+                            <!-- 依赖jar包的输出目录为 target/lib -->
                             <outputDirectory>target/lib</outputDirectory>
-                            <excludeTransitive>false</excludeTransitive>
-                            <stripVersion>false</stripVersion>
+                            <!-- 仅拷贝运行时jar包 -->
                             <includeScope>runtime</includeScope>
+                            <!-- 去除 lombok -->
+                            <excludeArtifactIds>lombok</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>

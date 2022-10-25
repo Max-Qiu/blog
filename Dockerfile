@@ -1,4 +1,4 @@
-FROM openjdk:11.0.13-jdk-bullseye
+FROM openjdk:17.0.2-jdk
 ENV TZ=Asia/Shanghai
 WORKDIR /blog
 ADD ./target/resources ./resources

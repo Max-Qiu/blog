@@ -15,7 +15,7 @@
 ---|---
 CentOS | 7.6
 Docker | 20.10.17
-JDK | 11
+JDK | 17
 Maven | 3.8.6
 MySQL | 8.0.30
 Redis | 6.2.6
@@ -26,10 +26,10 @@ Nginx | 1.23.1
 
 框架 | 版本
 ---|---
-SpringBoot | 2.7.3
+SpringBoot | 2.7.5
 Mybatis Plus | 3.5.2
-Fastjson2 | 2.0.11
-Hutool | 5.8.3
+Fastjson2 | 2.0.16
+Hutool | 5.8.9
 
 # 部署说明
 

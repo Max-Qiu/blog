@@ -2,7 +2,7 @@
 
 ## 基础环境搭建
 
-- [CentOS7配置jdk](https://maxqiu.com/article/detail/4)（需要安装JDK11）
+- [CentOS7配置jdk](https://maxqiu.com/article/detail/4)（需要安装JDK17）
 - [CentOS7配置Maven3.8.6](https://maxqiu.com/article/detail/6)
 - [CentOS7使用源码包编译安装Git](https://maxqiu.com/article/detail/104)
 - [CentOS7安装docker-ce（阿里源）](https://maxqiu.com/article/detail/24)

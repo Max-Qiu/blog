@@ -59,7 +59,9 @@
     <div class="login-box login-header">
         <h2>麦克斯博客 - 管理端</h2>
     </div>
-    <div class="login-box login-body layui-form">
+    <div style="text-align: center" th:if="${param.error != null}">登录失败！<span th:if="${session.SPRING_SECURITY_LAST_EXCEPTION != null}"><br/>原因：<span style="color: red" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">未知</span></span></div>
+    <div style="text-align: center" th:if="${param.logout != null}">您已注销登录。</div>
+    <form id="login-form" method="post" action="/_admin/login" class="login-box login-body layui-form">
         <div class="layui-form-item">
             <label class="login-icon layui-icon layui-icon-username"></label>
             <input type="text" name="username" lay-verify="required" placeholder="用户名" class="layui-input" value="admin">
@@ -69,9 +71,12 @@
             <input id="password" type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input">
         </div>
         <div class="layui-form-item">
+            <input type="checkbox" id="remember-me" name="remember-me" title="记住我" checked>
+        </div>
+        <div class="layui-form-item">
             <button id="login-submit" class="layui-btn layui-btn-fluid" lay-submit="" lay-filter="login-submit">L O G I N</button>
         </div>
-    </div>
+    </form>
 </div>
 <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://cdn.staticfile.org/layui/2.5.7/layui.min.js" type="text/javascript" charset="utf-8"></script>
@@ -94,26 +99,7 @@
                 shade: 0.05,
                 time: 0
             });
-            $.post("/_admin/user/login", {
-                username: data.field.username,
-                password: data.field.password
-            }, function (result) {
-                layer.close(i);
-                if (result.code == 0) {
-                    $.cookie(
-                        'admin', 'true', {
-                            'path': '/',
-                            'expires': 3650
-                        }
-                    );
-                    window.location.href = "/_admin";
-                } else {
-                    layer.msg('登录失败', {
-                        icon: 2,
-                        time: 1000
-                    });
-                }
-            });
+            $('#login-form').submit();
         });
     });
 

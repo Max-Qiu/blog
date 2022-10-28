@@ -36,7 +36,7 @@
         <div class="layui-logo">博客后台管理</div>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:" onclick="logout()">退出</a>
+                <a href="/_admin/logout">退出</a>
             </li>
         </ul>
     </div>
@@ -80,19 +80,6 @@
         // 激活样式
         $('#menu a[href^="' + path + '"]').parent().addClass("layui-this");
     });
-
-    function logout() {
-        $.post("/_admin/user/logout", function (result) {
-            if (result.code == 0) {
-                window.location.href = "/_admin/login";
-            } else {
-                layer.msg('退出失败', {
-                    icon: 2,
-                    time: 1000
-                });
-            }
-        })
-    }
 </script>
 <script type="text/javascript" th:include="::pageScript"></script>
 </body>

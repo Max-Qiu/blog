@@ -69,7 +69,7 @@ CREATE TABLE `log_article` (
   `article_id` int unsigned NOT NULL COMMENT '文章ID',
   `cookie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '用户cookie',
   `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '浏览器标识',
-  `referer` varchar(255) DEFAULT NULL COMMENT '来源',
+  `referer` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '来源',
   `ip` bigint unsigned NOT NULL COMMENT '访问者IP（long）',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
@@ -204,6 +204,16 @@ INSERT INTO `nickname` VALUES (107,'鼓上蚤-时迁');
 INSERT INTO `nickname` VALUES (108,'金毛犬-段景住');
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `persistent_logins` (
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `series` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `last_used` timestamp NOT NULL,
+  PRIMARY KEY (`series`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户名',
@@ -213,4 +223,4 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='用户';
 /*!40101 SET character_set_client = @saved_cs_client */;
-INSERT INTO `user` VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','2021-07-01 00:00:00','2021-07-01 00:00:00');
+INSERT INTO `user` VALUES (1,'admin','$2a$10$gO0FsHC/RI.CDD45JpqN1eiR0AHs0/hk1cHNSbcRy0GXKcSPUKNgm','2021-07-01 00:00:00','2022-10-28 22:00:00');

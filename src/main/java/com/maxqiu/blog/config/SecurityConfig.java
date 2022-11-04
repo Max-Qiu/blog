@@ -130,6 +130,9 @@ public class SecurityConfig {
         // 配置 csrf （直接关闭配置）
         http.csrf(CsrfConfigurer::disable);
 
+        // 设置请求头中的 X-Frame-Options 为 SAMEORIGIN 模式
+        http.headers().frameOptions().sameOrigin();
+
         return http.build();
     }
 }

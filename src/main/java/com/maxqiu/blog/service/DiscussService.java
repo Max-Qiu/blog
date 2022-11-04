@@ -69,6 +69,7 @@ public class DiscussService extends ServiceImpl<DiscussMapper, Discuss> {
     public Page<Discuss> managerPage(Integer pageNumber, Integer pageSize, Boolean check) {
         LambdaQueryWrapper<Discuss> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(check != null, Discuss::getCheck, check);
+        wrapper.orderByDesc(Discuss::getId);
         return page(new Page<>(pageNumber, pageSize), wrapper);
     }
 

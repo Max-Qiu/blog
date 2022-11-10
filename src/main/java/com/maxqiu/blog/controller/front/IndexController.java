@@ -1,5 +1,7 @@
 package com.maxqiu.blog.controller.front;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -30,6 +32,12 @@ public class IndexController {
     public String index(Model model) {
         List<Article> list = articleService.top();
         model.addAttribute("list", list);
+        LocalDateTime time = LocalDateTime.now();
+        model.addAttribute("day", time.getHour() + "/23");
+        LocalDate date = time.toLocalDate();
+        model.addAttribute("week", date.getDayOfWeek().getValue() + "/7");
+        model.addAttribute("month", date.getMonthValue() + "/12");
+        model.addAttribute("year", date.getDayOfYear() + "/" + (date.isLeapYear() ? 366 : 365));
         return "index";
     }
 }

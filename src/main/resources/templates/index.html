@@ -48,19 +48,19 @@
     </fieldset>
     <div class="layui-progress layui-progress-big" lay-showpercent="true">
         <em>D</em>
-        <div id="day" class="layui-progress-bar layui-bg-green"></div>
+        <div class="layui-progress-bar layui-bg-green" th:lay-percent="${day}"></div>
     </div>
     <div class="layui-progress layui-progress-big" lay-showpercent="true">
         <em>W</em>
-        <div id="week" class="layui-progress-bar layui-bg-red"></div>
+        <div class="layui-progress-bar layui-bg-red" th:lay-percent="${week}"></div>
     </div>
     <div class="layui-progress layui-progress-big" lay-showpercent="true">
         <em>M</em>
-        <div id="month" class="layui-progress-bar layui-bg-blue"></div>
+        <div class="layui-progress-bar layui-bg-blue" th:lay-percent="${month}"></div>
     </div>
     <div class="layui-progress layui-progress-big" lay-showpercent="true">
         <em>Y</em>
-        <div id="year" class="layui-progress-bar"></div>
+        <div class="layui-progress-bar" th:lay-percent="${year}"></div>
     </div>
 </div>
 <th:block th:insert="layout :: public_script">
@@ -82,49 +82,8 @@
     }
 
     $(function () {
-        let t = $("input[name='search']").val();
-        $("input[name='search']").val("").focus().val(t);
-        let now = new Date();
-        $("#day").attr("lay-percent", now.getHours() + "/23");
-        let day = now.getDay();
-        if (day == 0) {
-            day = 7;
-        }
-        $("#week").attr("lay-percent", day + "/7");
-        $("#month").attr("lay-percent", now.getDate() + "/" + getDayOfMonth());
-        $("#year").attr("lay-percent", getDayOfYear() + "/" + getLastDayOfYear());
+        $("input[name='search']").focus();
     })
-
-    function getDayOfMonth() {
-        let day = new Date();
-        // 将日期设置为下月一号
-        day.setDate(1)
-        day.setMonth(day.getMonth() + 1)
-        // 获取本月最后一天
-        day.setDate(0)
-        return day.getDate()
-    }
-
-    function getDayOfYear() {
-        let day = new Date();
-        // 获取本年的第一天
-        day.setMonth(0);
-        day.setDate(1);
-        // 计算差值
-        let dateGap = new Date().getTime() - day.getTime();
-        return Math.ceil(dateGap / (24 * 60 * 60 * 1000)) + 1;
-    }
-
-    function getLastDayOfYear() {
-        let start = new Date();
-        start.setMonth(0);
-        start.setDate(1);
-        let end = new Date();
-        end.setMonth(11);
-        end.setDate(31);
-        let dateGap = end.getTime() - start.getTime();
-        return Math.ceil(dateGap / (24 * 60 * 60 * 1000)) + 1;
-    }
 </script>
 </body>
 </html>

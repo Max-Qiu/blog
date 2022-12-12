@@ -143,9 +143,10 @@ public class ArticleController {
      *            文章ID
      */
     @GetMapping("/detail/{articleId}")
-    public String detail(Model model, @CookieValue(value = "nickname", defaultValue = "") String nickname,
-        @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "mark", defaultValue = "") String mark,
-        HttpSession session, HttpServletResponse servletResponse, @PathVariable Integer articleId) {
+    public String detail(Model model, @RequestHeader("User-Agent") String userAgent,
+        @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "nickname", defaultValue = "") String nickname,
+        @CookieValue(value = "mark", defaultValue = "") String mark, HttpSession session, HttpServletRequest servletRequest,
+        HttpServletResponse servletResponse, @PathVariable Integer articleId) {
         // === 获取文章详细内容，并判断文章状态 ===
         Article article = articleService.getById(articleId);
         // 文章不存在，返回404
@@ -164,6 +165,17 @@ public class ArticleController {
             }
         }
         model.addAttribute("article", article);
+
+        // === 如果是爬虫，则直接返回爬虫页面 ===
+        // 1. 判断浏览器标识
+        if (ipUtil.isSpider(userAgent)) {
+            return "article/articleDetailRobot";
+        }
+        // 2. 判断IP
+        IpInfo ipInfo = ipInfoService.getByIpStr(ipUtil.getIpAddress(servletRequest));
+        if (ipInfo == null || ipUtil.operatorIsCloud(ipInfo.getOperator())) {
+            return "article/articleDetailRobot";
+        }
 
         // === 获取评论内容 ===
         model.addAttribute("discussList", discussService.list(articleId, false));

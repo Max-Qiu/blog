@@ -19,17 +19,17 @@ JDK | 17
 Maven | 3.8.6
 MySQL | 8.0.30
 Redis | 6.2.6
-ElasticSearch | 7.17.4
-Nginx | 1.23.1
+ElasticSearch | 7.17.7
+Nginx | 1.22.1
 
 ## 框架版本
 
 框架 | 版本
 ---|---
-SpringBoot | 2.7.5
-Mybatis Plus | 3.5.2
-Fastjson2 | 2.0.16
-Hutool | 5.8.9
+SpringBoot | 2.7.6
+Mybatis Plus | 3.5.3.1
+Fastjson2 | 2.0.23
+Hutool | 5.8.11
 
 # 部署说明
 

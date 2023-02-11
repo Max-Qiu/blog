@@ -94,6 +94,11 @@ http {
 
     server {
         listen 80;
+        server_name domain.com;
+        # 仅当前域名可以访问
+        if ($host != 'domain.com'){
+            return 301 https://domain.com$request_uri;
+        }
         # 拦截乱七八糟的请求
         set $flag f;
         if ($request_uri ~* "^/(|sitemap.txt|favicon.ico)$") {

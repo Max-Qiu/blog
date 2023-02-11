@@ -1,4 +1,4 @@
-FROM openjdk:17.0.2-jdk
+FROM eclipse-temurin:17.0.6_10-jdk-centos7
 ENV TZ=Asia/Shanghai
 WORKDIR /blog
 ADD ./target/resources ./resources

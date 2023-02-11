@@ -171,9 +171,9 @@ public class ArticleController {
         if (ipUtil.isSpider(userAgent)) {
             return "article/articleDetailRobot";
         }
-        // 2. 判断IP
+        // 2. 判断IP是否为云服务器访问
         IpInfo ipInfo = ipInfoService.getByIpStr(ipUtil.getIpAddress(servletRequest));
-        if (ipInfo == null || ipUtil.operatorIsCloud(ipInfo.getOperator())) {
+        if (ipInfo != null && ipUtil.operatorIsCloud(ipInfo.getOperator())) {
             return "article/articleDetailRobot";
         }
 
@@ -236,17 +236,19 @@ public class ArticleController {
             // 有任意一个为空，非正常访问，直接返回
             return Result.error();
         }
+
         // 判断用户标识
         if (ipUtil.isSpider(userAgent)) {
             return Result.error();
         }
         // 获取用户IP
         String ipStr = ipUtil.getIpAddress(servletRequest);
-        /// 检查是否为云服务器访问
+        // 判断IP是否为云服务器访问
         IpInfo ipInfo = ipInfoService.getByIpStr(ipStr);
-        if (ipInfo == null || ipUtil.operatorIsCloud(ipInfo.getOperator())) {
+        if (ipInfo != null && ipUtil.operatorIsCloud(ipInfo.getOperator())) {
             return Result.error();
         }
+
         // 特殊情况，用户标识存在，且已访问过
         boolean hasLog = logArticleService.checkHasLog(fromRequest.getArticleId(), mark);
         if (hasLog) {

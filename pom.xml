@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.3</version>
+            <version>3.5.3.1</version>
         </dependency>
         <!-- elasticsearch -->
         <dependency>
@@ -120,12 +120,12 @@
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
-            <version>2.0.21</version>
+            <version>2.0.23</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2-extension</artifactId>
-            <version>2.0.21</version>
+            <artifactId>fastjson2-extension-spring5</artifactId>
+            <version>2.0.23</version>
         </dependency>
         <!-- hutool工具包 -->
         <dependency>

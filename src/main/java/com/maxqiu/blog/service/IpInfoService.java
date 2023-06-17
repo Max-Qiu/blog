@@ -30,7 +30,7 @@ public class IpInfoService extends ServiceImpl<IpInfoMapper, IpInfo> {
      * @param ipStr
      *            IP字符串
      */
-    public IpInfo getByIpStr(String ipStr) {
+    public synchronized IpInfo getByIpStr(String ipStr) {
         long longIpv4 = NetUtil.ipv4ToLong(ipStr);
         IpInfo ipInfo = getById(longIpv4);
         // 2. 如果IP信息存在且未超过一年（正常IP地址信息不会变动，半年更新一次即可）

@@ -124,8 +124,8 @@ public class ArticleController {
         model.addAttribute("page", resultVO);
 
         // 显示标签列表
-        List<Label> labelList = labelService.listByNum();
-        model.addAttribute("labelList", labelList);
+        List<Label> labelList = labelService.listAndDescByNum();
+        model.addAttribute("labelList", labelList.stream().filter(e -> e.getCount() != 0).toList());
 
         // 数据回显
         if (StringUtils.hasText(request.getSearch())) {

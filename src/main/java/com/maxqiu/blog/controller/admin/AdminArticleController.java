@@ -59,7 +59,7 @@ public class AdminArticleController {
      */
     @GetMapping("manager")
     public String manager(Model model) {
-        model.addAttribute("labelList", labelService.listByNum());
+        model.addAttribute("labelList", labelService.listAndDescByNum());
         return "_admin/article/articleManager";
     }
 
@@ -83,7 +83,7 @@ public class AdminArticleController {
      */
     @RequestMapping("edit")
     public String edit(Model model, Integer articleId) {
-        model.addAttribute("labelList", labelService.listByNum());
+        model.addAttribute("labelList", labelService.listAndDescByNum());
         // 如果ID不存在，则为新建
         if (articleId != null) {
             Article article = articleService.getById(articleId);

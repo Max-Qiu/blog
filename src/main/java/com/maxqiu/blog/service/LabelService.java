@@ -23,7 +23,7 @@ public class LabelService extends ServiceImpl<LabelMapper, Label> {
     /**
      * 根据标签数量倒序返回列表
      */
-    public List<Label> listByNum() {
+    public List<Label> listAndDescByNum() {
         LambdaQueryWrapper<Label> wrapper = Wrappers.lambdaQuery();
         wrapper.orderByDesc(Label::getCount);
         return list(wrapper);

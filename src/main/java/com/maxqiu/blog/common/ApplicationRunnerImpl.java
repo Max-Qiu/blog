@@ -2,8 +2,6 @@ package com.maxqiu.blog.common;
 
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -13,6 +11,7 @@ import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.NicknameService;
 import com.maxqiu.blog.utils.SitemapUtil;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 /**

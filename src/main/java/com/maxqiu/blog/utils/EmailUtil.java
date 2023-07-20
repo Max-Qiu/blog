@@ -3,13 +3,13 @@ package com.maxqiu.blog.utils;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+
+import jakarta.annotation.Resource;
 
 /**
  * 邮件 服务

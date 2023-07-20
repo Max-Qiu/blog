@@ -3,20 +3,19 @@ package com.maxqiu.blog.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.client.elc.NativeQuery;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.HighlightQuery;
+import org.springframework.data.elasticsearch.core.query.highlight.Highlight;
+import org.springframework.data.elasticsearch.core.query.highlight.HighlightField;
+import org.springframework.data.elasticsearch.core.query.highlight.HighlightFieldParameters;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -29,6 +28,9 @@ import com.maxqiu.blog.mapper.ArticleMapper;
 import com.maxqiu.blog.repository.ArticleRepository;
 
 import cn.hutool.http.HtmlUtil;
+import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -47,7 +49,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     private ArticleRepository articleRepository;
 
     @Resource
-    private ElasticsearchRestTemplate template;
+    private ElasticsearchTemplate template;
 
     /**
      * 文章展示总量
@@ -100,32 +102,38 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      */
     public SearchHits<ArticleEs> search(Integer pageNumber, Integer pageSize, Integer labelId, String search) {
         // 子选项，标题和文章选中一个即可
-        BoolQueryBuilder childBoolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQuery.Builder childBoolQueryBuilder = QueryBuilders.bool();
         // 标题匹配，可选
-        childBoolQueryBuilder.should(QueryBuilders.matchQuery("title", search));
+        childBoolQueryBuilder.should(QueryBuilders.match(builder -> builder.field("title").query(search)));
         // 文章匹配，可选
-        childBoolQueryBuilder.should(QueryBuilders.matchQuery("text", search));
+        childBoolQueryBuilder.should(QueryBuilders.match(builder -> builder.field("text").query(search)));
 
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        BoolQuery.Builder boolQueryBuilder = QueryBuilders.bool();
         // 标题和文章必须选中一个
-        boolQueryBuilder.must(childBoolQueryBuilder);
+        boolQueryBuilder.must(childBoolQueryBuilder.build()._toQuery());
         // 标签匹配，如果有，则必须
         if (labelId != 0) {
-            boolQueryBuilder.must(QueryBuilders.matchPhraseQuery("labelIds", labelId));
+            boolQueryBuilder.must(QueryBuilders.matchPhrase(builder -> builder.field("labelIds").query(String.valueOf(labelId))));
         }
 
         // 标签匹配，如果有，则必须
-        boolQueryBuilder.must(QueryBuilders.matchQuery("show", true));
+        boolQueryBuilder.must(QueryBuilders.match(builder -> builder.field("show").query(true)));
 
-        NativeSearchQueryBuilder nativeSearchQueryBuilder = new NativeSearchQueryBuilder()
+        NativeQueryBuilder nativeQueryBuilder = new NativeQueryBuilder()
             // 分页
             .withPageable(PageRequest.of(pageNumber - 1, pageSize))
             // 标题、文本高亮
-            .withHighlightFields(new HighlightBuilder.Field("text").fragmentSize(250).preTags("<span style='color: #e9c984;'>").postTags("</span>"),
-                new HighlightBuilder.Field("title").preTags("<span style='color: #e9c984;'>").postTags("</span>"))
+            .withHighlightQuery(new HighlightQuery(new Highlight(List.of(
+                new HighlightField("text",
+                    new HighlightFieldParameters.HighlightFieldParametersBuilder().withFragmentSize(250).withPreTags("<span style='color: #e9c984;'>")
+                        .withPostTags("</span>").build()),
+                new HighlightField("title",
+                    new HighlightFieldParameters.HighlightFieldParametersBuilder().withPreTags("<span style='color: #e9c984;'>")
+                        .withPostTags("</span>").build()))),
+                ArticleEs.class))
             // 查询条件， 必须要有条件，否则无法高亮
-            .withQuery(boolQueryBuilder);
-        NativeSearchQuery query = nativeSearchQueryBuilder.build();
+            .withQuery(boolQueryBuilder.build()._toQuery());
+        NativeQuery query = nativeQueryBuilder.build();
         return template.search(query, ArticleEs.class);
     }
 

@@ -4,12 +4,12 @@
     <title th:text="${article.title}">标题</title>
     <meta name="Description" th:content="${article.title}" content="标题"/>
     <meta name="Keywords" th:content="${article.labelNames}" content="标签"/>
-    <th:block th:insert="layout :: public_head">
+    <th:block th:insert="~{layout :: public_head}">
     </th:block>
     <link rel="stylesheet" type="text/css" href="/assets/editor.md/css/editormd.min.css"/>
 </head>
 <body>
-<th:block th:insert="layout :: public_page">
+<th:block th:insert="~{layout :: public_page}">
 </th:block>
 <div class="main detail">
     <div class="item">
@@ -44,7 +44,7 @@
                     <span>全部评论</span>
                 </div>
                 <ul class="list-item">
-                    <th:block th:insert="article/discuss :: discuss(discussList=${discussList},parentsNickname=null)">
+                    <th:block th:insert="~{article/discuss :: discuss(discussList=${discussList},parentsNickname=null)}">
                     </th:block>
                 </ul>
             </div>
@@ -57,7 +57,7 @@
     </fieldset>
     <div id="toc-container" class="markdown-body editormd-preview-container"></div>
 </div>
-<th:block th:insert="layout :: public_script">
+<th:block th:insert="~{layout :: public_script}">
 </th:block>
 <script src="/assets/editor.md/editormd.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/assets/editor.md/lib/marked.min.js" type="text/javascript" charset="utf-8"></script>

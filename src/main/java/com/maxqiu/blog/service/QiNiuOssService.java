@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.maxqiu.blog.properties.QiNiuOssProperties;
@@ -15,6 +13,8 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+
+import jakarta.annotation.Resource;
 
 /**
  * 七牛云 服务

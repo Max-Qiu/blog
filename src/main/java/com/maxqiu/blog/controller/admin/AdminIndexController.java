@@ -2,8 +2,6 @@ package com.maxqiu.blog.controller.admin;
 
 import java.io.File;
 
-import javax.annotation.Resource;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +12,8 @@ import com.maxqiu.blog.properties.PathProperties;
 import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.QiNiuOssService;
 import com.maxqiu.blog.utils.SitemapUtil;
+
+import jakarta.annotation.Resource;
 
 /**
  * 首页

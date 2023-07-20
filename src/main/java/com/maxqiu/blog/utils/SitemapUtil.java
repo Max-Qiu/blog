@@ -6,13 +6,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
 import com.maxqiu.blog.properties.PathProperties;
 import com.maxqiu.blog.service.ArticleService;
+
+import jakarta.annotation.Resource;
 
 /**
  * @author Max_Qiu

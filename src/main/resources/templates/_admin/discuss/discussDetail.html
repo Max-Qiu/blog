@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
-<div th:fragment="content">
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="~{_admin/layout}">
+<div th:fragment="content" th:remove="tag">
     <div class="main">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>标题：</legend>
@@ -21,7 +21,7 @@
             </tr>
             </thead>
             <tbody>
-            <th:block th:insert="_admin/discuss/discuss :: discuss(discussList=${discussList},parentsNickname=null)">
+            <th:block th:insert="~{_admin/discuss/discuss :: discuss(discussList=${discussList},parentsNickname=null)}">
             </th:block>
             </tbody>
         </table>
@@ -33,7 +33,7 @@
     </script>
     <script src="/assets/common/js/layuiTableDefaultOptions.js" type="text/javascript" charset="utf-8"></script>
 </div>
-<script type="text/javascript" th:fragment="pageScript">
+<script type="text/javascript" th:fragment="pageScript" th:remove="tag">
     layui.use('table', function () {
         let table = layui.table;
         table.set(layuiTableOptions);

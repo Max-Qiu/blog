@@ -2,14 +2,14 @@
 <html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>个人简介 | 麦克斯仇的博客</title>
-    <th:block th:insert="layout :: public_head">
+    <th:block th:insert="~{layout :: public_head}">
     </th:block>
 </head>
 <body>
-<th:block th:insert="layout :: public_page">
+<th:block th:insert="~{layout :: public_page}">
 </th:block>
 <div class="main about me">
-    <th:block th:insert="about/public_type_page :: public_type_tabs">
+    <th:block th:insert="~{about/public_type_page :: public_type_tabs}">
     </th:block>
     <div class="item">
         <h4 class="title">我的简介</h4>
@@ -21,9 +21,9 @@
         <span style="color: white;">微信：</span><img class="code" src="/assets/common/img/wxqrcode.png">
     </div>
 </div>
-<th:block th:insert="layout :: public_script">
+<th:block th:insert="~{layout :: public_script}">
 </th:block>
-<th:block th:insert="about/public_type_page :: public_type_script">
+<th:block th:insert="~{about/public_type_page :: public_type_script}">
 </th:block>
 </body>
 </html>

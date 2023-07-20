@@ -56,7 +56,7 @@
             </ul>
         </div>
     </div>
-    <div class="layui-body" id="container" th:include="::content">
+    <div class="layui-body" id="container" th:insert="~{::content}">
     </div>
 </div>
 <script src="https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
@@ -81,6 +81,6 @@
         $('#menu a[href^="' + path + '"]').parent().addClass("layui-this");
     });
 </script>
-<script type="text/javascript" th:include="::pageScript"></script>
+<script type="text/javascript" th:insert="~{::pageScript}"></script>
 </body>
 </html>

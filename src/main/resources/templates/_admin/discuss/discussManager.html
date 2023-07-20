@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
-<div th:fragment="content">
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="~{_admin/layout}">
+<div th:fragment="content" th:remove="tag">
     <div class="main">
         <form class="layui-form">
             <div class="layui-form-item">
@@ -33,7 +33,7 @@
     </script>
     <script src="/assets/common/js/layuiTableDefaultOptions.js" type="text/javascript" charset="utf-8"></script>
 </div>
-<script type="text/javascript" th:fragment="pageScript">
+<script type="text/javascript" th:fragment="pageScript" th:remove="tag">
     let table;
     layui.use(['table', 'form'], function () {
         table = layui.table;

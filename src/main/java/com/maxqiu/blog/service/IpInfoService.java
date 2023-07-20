@@ -3,8 +3,6 @@ package com.maxqiu.blog.service;
 import java.time.LocalDate;
 import java.time.Period;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,6 +11,7 @@ import com.maxqiu.blog.mapper.IpInfoMapper;
 import com.maxqiu.blog.pojo.dto.Ip138InfoDTO;
 
 import cn.hutool.core.net.NetUtil;
+import jakarta.annotation.Resource;
 
 /**
  * IP地址信息缓存 服务类

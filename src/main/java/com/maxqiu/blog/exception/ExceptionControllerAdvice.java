@@ -3,10 +3,6 @@ package com.maxqiu.blog.exception;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -21,6 +17,9 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import com.maxqiu.blog.common.Result;
 import com.maxqiu.blog.enums.ResultEnum;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Path;
 import lombok.extern.slf4j.Slf4j;
 
 /**

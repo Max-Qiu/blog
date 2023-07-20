@@ -7,8 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,6 +14,8 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.maxqiu.blog.pojo.dto.Ip138InfoDTO;
 import com.maxqiu.blog.properties.Ip138Properties;
+
+import jakarta.annotation.Resource;
 
 /**
  * ip138 服务

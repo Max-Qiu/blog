@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +31,8 @@ import com.maxqiu.blog.request.AdminArticlePageRequest;
 import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.LabelService;
 import com.maxqiu.blog.service.QiNiuOssService;
+
+import jakarta.annotation.Resource;
 
 /**
  * 文章管理

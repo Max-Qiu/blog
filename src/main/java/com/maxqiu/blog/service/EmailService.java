@@ -1,13 +1,12 @@
 package com.maxqiu.blog.service;
 
-import javax.annotation.Resource;
-
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.maxqiu.blog.properties.EmailProperties;
 import com.maxqiu.blog.utils.EmailUtil;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 /**

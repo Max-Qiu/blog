@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Resource;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +21,8 @@ import com.maxqiu.blog.request.AdminDiscussPageRequest;
 import com.maxqiu.blog.request.DiscussFromRequest;
 import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.DiscussService;
+
+import jakarta.annotation.Resource;
 
 /**
  * 评论管理

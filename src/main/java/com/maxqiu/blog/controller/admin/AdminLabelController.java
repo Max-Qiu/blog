@@ -1,7 +1,5 @@
 package com.maxqiu.blog.controller.admin;
 
-import javax.annotation.Resource;
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +13,8 @@ import com.maxqiu.blog.request.AdminLabelFromRequest;
 import com.maxqiu.blog.request.AdminLabelPageRequest;
 import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.LabelService;
+
+import jakarta.annotation.Resource;
 
 /**
  * 标签 前端控制器

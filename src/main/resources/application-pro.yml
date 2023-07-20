@@ -11,12 +11,13 @@ spring:
     username: root # 用户名
     password: 123 # 密码
   # Redis
-  redis:
-    host: redis # 地址
-    port: 6379 # 端口
-    username: # 用户名
-    password: 123 # 密码
-    database: 0 # 指定数据库序号
+  data:
+    redis:
+      host: redis # 地址
+      port: 6379 # 端口
+      username: # 用户名
+      password: 123 # 密码
+      database: 0 # 指定数据库序号
   # 邮箱设置
   mail:
     enable: false
@@ -53,3 +54,9 @@ qi-niu:
     access-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # access
     secret-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # secret
     bucket: xxxxxx # bucket
+elasticsearch:
+  hostAndPorts: # elasticsearch 连接地址，可填写多个
+    - 127.0.0.1:9200
+  username: elastic
+  password: password
+  ca-fingerprint: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

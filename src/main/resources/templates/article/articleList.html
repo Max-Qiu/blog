@@ -4,11 +4,11 @@
     <title>文章 | 麦克斯仇的博客</title>
     <meta name="Description" content="麦克斯仇的博客"/>
     <meta name="Keywords" content="java,程序员,麦克斯仇,博客"/>
-    <th:block th:insert="layout :: public_head">
+    <th:block th:insert="~{layout :: public_head}">
     </th:block>
 </head>
 <body>
-<th:block th:insert="layout :: public_page">
+<th:block th:insert="~{layout :: public_page}">
 </th:block>
 <div class="main article">
     <div class="search">
@@ -50,7 +50,7 @@
         <button th:each="label,labelStat:${labelList}" id="1" th:id="${label.id}" class="layui-btn" th:classappend="${label.id eq labelId} ? 'layui-btn-primary' : ''" th:text="${label.name} + '('+ ${label.count} + ')'">Nacos</button>
     </div>
 </div>
-<th:block th:insert="layout :: public_script">
+<th:block th:insert="~{layout :: public_script}">
 </th:block>
 <script>
     layui.use('laypage', function () {

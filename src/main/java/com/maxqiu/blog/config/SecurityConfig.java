@@ -3,17 +3,13 @@ package com.maxqiu.blog.config;
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -29,6 +25,12 @@ import com.maxqiu.blog.entity.User;
 import com.maxqiu.blog.service.LogLoginService;
 import com.maxqiu.blog.service.UserService;
 import com.maxqiu.blog.utils.IpUtil;
+
+import jakarta.annotation.Resource;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author Max_Qiu
@@ -120,18 +122,20 @@ public class SecurityConfig {
         });
 
         // 配置认证
-        http.authorizeRequests(urlRegistry -> {
+        http.authorizeHttpRequests(urlRegistry -> {
             // 指定管理员登录页面无需权限校验
-            urlRegistry.antMatchers("/_admin/login").permitAll();
             // 所有的其他管理员页面请求都需要认证
-            urlRegistry.antMatchers("/_admin/**").authenticated();
+            urlRegistry.requestMatchers("/_admin/login").permitAll();
+            urlRegistry.requestMatchers("/_admin/**").authenticated();
+            urlRegistry.requestMatchers("/**").permitAll();
         });
 
         // 配置 csrf （直接关闭配置）
         http.csrf(CsrfConfigurer::disable);
 
         // 设置请求头中的 X-Frame-Options 为 SAMEORIGIN 模式
-        http.headers().frameOptions().sameOrigin();
+        // http.headers().frameOptions().sameOrigin();
+        http.headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }

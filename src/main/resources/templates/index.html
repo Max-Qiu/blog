@@ -4,11 +4,11 @@
     <title>首页 | 麦克斯仇的博客</title>
     <meta name="Keywords" content="麦克斯仇的博客"/>
     <meta name="Description" content="java,程序员,麦克斯仇,博客"/>
-    <th:block th:insert="layout :: public_head">
+    <th:block th:insert="~{layout :: public_head}">
     </th:block>
 </head>
 <body>
-<th:block th:insert="layout :: public_page">
+<th:block th:insert="~{layout :: public_page}">
 </th:block>
 <div class="main index">
     <div class="search">
@@ -63,7 +63,7 @@
         <div class="layui-progress-bar" th:lay-percent="${year}"></div>
     </div>
 </div>
-<th:block th:insert="layout :: public_script">
+<th:block th:insert="~{layout :: public_script}">
 </th:block>
 <script type="text/javascript">
     /**

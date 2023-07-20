@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="_admin/layout">
-<div th:fragment="content">
+<html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:replace="~{_admin/layout}">
+<div th:fragment="content" th:remove="tag">
     <div style="padding: 15px;">
         <button class="layui-btn" onclick="clean()">文件清理</button>
         <button class="layui-btn" onclick="sitemap()">生成sitemap.xml</button>
     </div>
 </div>
-<script type="text/javascript" th:fragment="pageScript">
+<script type="text/javascript" th:fragment="pageScript" th:remove="tag">
     layui.use('layer', function () {
         let layer = layui.layer;
     })

@@ -9,7 +9,7 @@
         <td th:text="${discuss.content}">#(discuss.content)</td>
         <td><span class="layui-bg-green" th:if="${discuss.check}">是</span><span class="layui-bg-orange" th:if="${!discuss.check}">否</span></td>
         <td th:text="${#temporals.format(discuss.createTime, 'yyyy/MM/dd HH:mm:ss')}">2021/01/01 12:00:00</td>
-        <th:block th:insert="_admin/discuss/discuss :: discuss(discussList=${discuss.childList},parentsNickname=${discuss.nickname})">
+        <th:block th:insert="~{_admin/discuss/discuss :: discuss(discussList=${discuss.childList},parentsNickname=${discuss.nickname})}">
         </th:block>
     </tr>
 </th:block>

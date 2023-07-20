@@ -2,10 +2,10 @@
 
 ## 基础环境搭建
 
-- [CentOS7配置jdk](https://maxqiu.com/article/detail/4)（需要安装JDK17）
-- [CentOS7配置Maven3.8.6](https://maxqiu.com/article/detail/6)
-- [CentOS7使用源码包编译安装Git](https://maxqiu.com/article/detail/104)
-- [CentOS7安装docker-ce（阿里源）](https://maxqiu.com/article/detail/24)
+- [Linux 配置 jdk](https://maxqiu.com/article/detail/4)（需要安装JDK17）
+- [Linux 配置 Maven3.8.6](https://maxqiu.com/article/detail/6)
+- [CentOS7 / Debian10 使用源码包编译安装 Git](https://maxqiu.com/article/detail/104)
+- [CentOS7 安装 Docker-CE](https://maxqiu.com/article/detail/24)
 
 ## 基础服务搭建
 
@@ -13,7 +13,7 @@
 
 - [Docker常用镜像：MySQL](https://maxqiu.com/article/detail/32)
 - [Docker常用镜像：Redis](https://maxqiu.com/article/detail/51)
-- [Docker常用镜像：Elasticsearch](https://maxqiu.com/article/detail/54)
+- [Docker 环境安装 Elasticsearch8.7.1 （ik分词器 + 单节点模式 + 集群模式） + Kibana8.7.1](https://maxqiu.com/article/detail/150)
 
 特别说明：
 
@@ -57,7 +57,9 @@ cd blog/
 ./depoly.sh
 ```
 
-启动之后 `docker stats` 查看CPU占用，一段时间（一两分钟）后CPU占用回归零点几、一点几；若发现服务有重启的情况，肯定是部分配置错误，使用 `docker logs -f blog` 查看日志排查问题
+启动之后 `docker stats`
+查看CPU占用，一段时间（一两分钟）后CPU占用回归零点几、一点几；若发现服务有重启的情况，肯定是部分配置错误，使用 `docker logs -f blog`
+查看日志排查问题
 
 ## 搭建 Nginx
 

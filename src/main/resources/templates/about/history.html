@@ -2,20 +2,30 @@
 <html lang="zh" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>更新记录 | 麦克斯仇的博客</title>
-    <th:block th:insert="layout :: public_head">
+    <th:block th:insert="~{layout :: public_head}">
     </th:block>
 </head>
 <body>
-<th:block th:insert="layout :: public_page">
+<th:block th:insert="~{layout :: public_page}">
 </th:block>
 <div class="main about history">
-    <th:block th:insert="about/public_type_page :: public_type_tabs">
+    <th:block th:insert="~{about/public_type_page :: public_type_tabs}">
     </th:block>
     <div class="item">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>SpringBoot版</legend>
         </fieldset>
         <ul class="layui-timeline">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">2023年07月20日</h3>
+                    <p>V5.0.0</p>
+                    <ul>
+                        <li>升级至 SpringBoot 3.1.2</li>
+                    </ul>
+                </div>
+            </li>
             <li class="layui-timeline-item">
                 <i class="layui-icon layui-timeline-axis"></i>
                 <div class="layui-timeline-content layui-text">
@@ -316,9 +326,9 @@
         </ul>
     </div>
 </div>
-<th:block th:insert="layout :: public_script">
+<th:block th:insert="~{layout :: public_script}">
 </th:block>
-<th:block th:insert="about/public_type_page :: public_type_script">
+<th:block th:insert="~{about/public_type_page :: public_type_script}">
 </th:block>
 </body>
 </html>

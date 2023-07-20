@@ -11,12 +11,13 @@ spring:
     username: root # 用户名
     password: 123 # 密码
   # Redis
-  redis:
-    host: redis # 地址
-    port: 6379 # 端口
-    username: # 用户名
-    password: 123 # 密码
-    database: 0 # 指定数据库序号
+  data:
+    redis:
+      host: redis # 地址
+      port: 6379 # 端口
+      username: # 用户名
+      password: 123 # 密码
+      database: 0 # 指定数据库序号
   # 邮箱设置
   mail:
     enable: false
@@ -25,14 +26,10 @@ spring:
     username: xxx@xxx.com # 用户名（发件邮箱账号）
     password: xxxxxxxx # 密码（发件人邮箱密码）
     admin-mail: xxx@xxx.com # 管理员收件邮箱（可与发件邮箱相同）
-  elasticsearch:
-    uris: http://elasticsearch:9200 # elasticsearch 连接地址
 # 日志配置
 logging:
   file:
     name: ./log/${spring.application.name}.log
-#  level:
-#    org.springframework.data.elasticsearch.client.WIRE: trace # 开启ES请求打印
 ## MyBatis
 #mybatis-plus:
 #  configuration:
@@ -62,3 +59,9 @@ qi-niu:
     access-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # access
     secret-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # secret
     bucket: xxxxxx # bucket
+elasticsearch:
+  hostAndPorts: # elasticsearch 连接地址，可填写多个
+    - 127.0.0.1:9200
+  username: elastic
+  password: password
+  ca-fingerprint: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

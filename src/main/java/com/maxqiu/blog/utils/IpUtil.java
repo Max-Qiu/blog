@@ -1,8 +1,8 @@
 package com.maxqiu.blog.utils;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Component;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author Max_Qiu

@@ -40,7 +40,7 @@ management:
     web:
       base-path: /actuator # 指定前置路径（测试环境使用默认地址）
       exposure:
-        include: "logfile" # 仅开启日志
+        include: "logfile,prometheus" # 仅开启日志
   health:
     mail:
       enabled: false # 关闭邮件服务健康检查（测试环境未配置邮箱）

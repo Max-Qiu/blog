@@ -51,7 +51,7 @@ public class IpUtil {
      *            IP
      */
     private boolean isNotTheIp(String ip) {
-        return ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip);
+        return ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip);
     }
 
     /**
@@ -61,7 +61,7 @@ public class IpUtil {
      *            浏览器标识
      */
     public boolean isSpider(String userAgent) {
-        return userAgent.contains("spider") || userAgent.contains("bot");
+        return userAgent.contains("spider") || userAgent.contains("bot") || userAgent.contains("HeadlessChrome");
     }
 
     /**

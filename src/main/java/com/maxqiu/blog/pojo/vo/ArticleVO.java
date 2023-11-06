@@ -74,7 +74,7 @@ public class ArticleVO {
      * 修改日期
      */
     @JsonFormat(pattern = "uuuu-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
+    private LocalDateTime modifiedTime;
 
     public ArticleVO(Article article) {
         this.id = article.getId();
@@ -87,7 +87,7 @@ public class ArticleVO {
         this.top = article.getTop();
         this.show = article.getShow();
         this.createTime = article.getCreateTime();
-        this.updateTime = article.getUpdateTime();
+        this.modifiedTime = article.getModifiedTime();
     }
 
     public ArticleVO(ArticleEs article) {

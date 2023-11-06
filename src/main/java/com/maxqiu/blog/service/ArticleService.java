@@ -1,5 +1,6 @@
 package com.maxqiu.blog.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -181,6 +182,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         boolean flag;
         if (id != null) {
             article.setId(id);
+            article.setModifiedTime(LocalDateTime.now());
             flag = article.updateById();
         } else {
             article.setView(0);
@@ -263,13 +265,13 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
     }
 
     /**
-     * 查找所有的展示的文章ID（用户初始化sitemap文件）
+     * 查找所有的展示的文章信息（用户初始化sitemap文件）
      */
-    public List<Integer> allShowId() {
+    public List<Article> allShowInfo() {
         LambdaQueryWrapper<Article> wrapper = Wrappers.lambdaQuery();
-        wrapper.select(Article::getId);
+        wrapper.select(Article::getId, Article::getModifiedTime);
         wrapper.eq(Article::getShow, 1);
-        return list(wrapper).stream().map(Article::getId).collect(Collectors.toList());
+        return list(wrapper);
     }
 
     /**

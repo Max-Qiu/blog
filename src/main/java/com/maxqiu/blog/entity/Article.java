@@ -84,13 +84,19 @@ public class Article extends Model<Article> {
     private Boolean show;
 
     /**
-     * 创建日期
+     * 创建时间
      */
     @TableField("create_time")
     private LocalDateTime createTime;
 
     /**
-     * 修改日期
+     * 修改时间
+     */
+    @TableField("modified_time")
+    private LocalDateTime modifiedTime;
+
+    /**
+     * 更新时间
      */
     @TableField("update_time")
     private LocalDateTime updateTime;

@@ -103,7 +103,7 @@ http {
         }
         # 拦截乱七八糟的请求
         set $flag f;
-        if ($request_uri ~* "^/(|sitemap.txt|favicon.ico)$") {
+        if ($request_uri ~* "^/(|sitemap.xml|favicon.ico)$") {
               set $flag "true";
         }
         if ($request_uri ~* "^/(article|about|assets|upload|_admin).*$") {

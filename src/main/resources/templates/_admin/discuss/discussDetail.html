@@ -38,7 +38,7 @@
         let table = layui.table;
         table.set(layuiTableOptions);
         table.init('discussTable', {
-            page: false
+            page: false, limit: 999
         });
         //监听行工具事件
         table.on('tool(discussTable)', function (obj) {

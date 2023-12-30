@@ -32,10 +32,12 @@ public class IpInfoService extends ServiceImpl<IpInfoMapper, IpInfo> {
     public synchronized IpInfo getByIpStr(String ipStr) {
         long longIpv4 = NetUtil.ipv4ToLong(ipStr);
         IpInfo ipInfo = getById(longIpv4);
-        // 2. 如果IP信息存在且未超过一年（正常IP地址信息不会变动，半年更新一次即可）
-        if (ipInfo != null && Period.between(ipInfo.getUpdateTime().toLocalDate(), LocalDate.now()).getMonths() <= 6) {
-            // 返回IP是否为云厂商
-            return ipInfo;
+        // 2. 如果IP信息存在且未超过半年（正常IP地址信息不会变动，半年更新一次即可）
+        if (ipInfo != null) {
+            Period period = Period.between(ipInfo.getUpdateTime().toLocalDate(), LocalDate.now());
+            if (period.getYears() <= 0 && period.getMonths() <= 6) {
+                return ipInfo;
+            }
         }
         // 数据库中不存在，调用第三方接口查询IP信息
         Ip138InfoDTO dto = ip138Service.query(ipStr);

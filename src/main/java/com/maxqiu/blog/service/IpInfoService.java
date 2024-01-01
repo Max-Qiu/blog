@@ -1,6 +1,7 @@
 package com.maxqiu.blog.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 import org.springframework.stereotype.Service;
@@ -55,6 +56,8 @@ public class IpInfoService extends ServiceImpl<IpInfoMapper, IpInfo> {
         newIpInfo.setOperator(dto.getOperator());
         newIpInfo.setPostalCode(dto.getPostalCode());
         newIpInfo.setAreaCode(dto.getAreaCode());
+        // 即使内容不变，也更新时间
+        newIpInfo.setUpdateTime(LocalDateTime.now());
         // 根据原IP地址是否在库中或者是否过期进行更新或者保存
         if (ipInfo != null) {
             newIpInfo.updateById();

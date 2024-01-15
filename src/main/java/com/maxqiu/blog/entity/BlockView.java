@@ -1,13 +1,14 @@
 package com.maxqiu.blog.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.maxqiu.blog.enums.BlockViewConditionEnum;
+import com.maxqiu.blog.enums.BlockViewTypeEnum;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- * 文章访问日志
+ * 屏蔽访问
  *
  * @author Max_Qiu
  */
@@ -25,63 +26,39 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @ToString
 @Accessors(chain = true)
-@TableName("log_article")
-public class LogArticle extends Model<LogArticle> {
+@TableName("block_view")
+public class BlockView extends Model<BlockView> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * ID
+     * 主键ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 文章ID
+     * 类型 1useragent 2ip
      */
-    @TableField("article_id")
-    private Integer articleId;
+    @TableField("`type`")
+    private BlockViewTypeEnum type;
 
     /**
-     * 用户cookie
+     * 条件 1= 2like
      */
-    @TableField("cookie")
-    private String cookie;
+    @TableField("`condition`")
+    private BlockViewConditionEnum condition;
 
     /**
-     * 浏览器标识
+     * 值
      */
-    @TableField("user_agent")
-    private String userAgent;
+    @TableField("`value`")
+    private String value;
 
     /**
-     * 来源
+     * 判断优先级
      */
-    @TableField("referer")
-    private String referer;
-
-    /**
-     * 访问者IP（long）
-     */
-    @TableField("ip")
-    private Long ip;
-
-    /**
-     * 屏蔽 0否 1是
-     */
-    @TableField("blocked")
-    private Boolean blocked;
-
-    /**
-     * 屏蔽原因ID
-     */
-    @TableField("block_id")
-    private Integer blockId;
-
-    /**
-     * 创建时间
-     */
-    @TableField("create_time")
-    private LocalDateTime createTime;
+    @TableField("priority")
+    private Integer priority;
 
     @Override
     public Serializable pkVal() {

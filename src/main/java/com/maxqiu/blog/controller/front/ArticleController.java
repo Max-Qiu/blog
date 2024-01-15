@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -26,11 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maxqiu.blog.common.Result;
-import com.maxqiu.blog.common.SystemConstant;
 import com.maxqiu.blog.common.UserConstant;
 import com.maxqiu.blog.entity.Article;
 import com.maxqiu.blog.entity.ArticleEs;
-import com.maxqiu.blog.entity.IpInfo;
 import com.maxqiu.blog.entity.Label;
 import com.maxqiu.blog.enums.ResultEnum;
 import com.maxqiu.blog.pojo.vo.ArticleVO;
@@ -41,7 +40,6 @@ import com.maxqiu.blog.request.FrontArticleSearchRequest;
 import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.DiscussService;
 import com.maxqiu.blog.service.EmailService;
-import com.maxqiu.blog.service.IpInfoService;
 import com.maxqiu.blog.service.LabelService;
 import com.maxqiu.blog.service.LogArticleService;
 import com.maxqiu.blog.utils.IpUtil;
@@ -71,9 +69,6 @@ public class ArticleController {
 
     @Resource
     private LogArticleService logArticleService;
-
-    @Resource
-    private IpInfoService ipInfoService;
 
     @Resource
     private IpUtil ipUtil;
@@ -143,10 +138,9 @@ public class ArticleController {
      *            文章ID
      */
     @GetMapping("/detail/{articleId}")
-    public String detail(Model model, @RequestHeader("User-Agent") String userAgent,
-        @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "nickname", defaultValue = "") String nickname,
-        @CookieValue(value = "mark", defaultValue = "") String mark, HttpSession session, HttpServletRequest servletRequest,
-        HttpServletResponse servletResponse, @PathVariable Integer articleId) {
+    public String detail(Model model, @RequestHeader(value = "referer", required = false) String referer,
+        @CookieValue(value = "nickname", defaultValue = "") String nickname, @CookieValue(value = "mark", defaultValue = "") String mark,
+        HttpSession session, HttpServletResponse servletResponse, @PathVariable Integer articleId) {
         // === 获取文章详细内容，并判断文章状态 ===
         Article article = articleService.getById(articleId);
         // 文章不存在，返回404
@@ -156,26 +150,15 @@ public class ArticleController {
         }
         // 文章是否可以查看
         if (!article.getShow()) {
-            // 文章状态时隐藏时，获取当前用户
-            Integer user = (Integer)session.getAttribute(SystemConstant.USER_ID_IN_SESSION_KEY);
-            // 如果当前用户为空，或者当前用户不是管理员，则返回404
-            if (user == null || user != 1) {
+            // 判断用户
+            if (SecurityContextHolder.getContext().getAuthentication() == null
+                || !SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                || !"admin".equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
                 servletResponse.setStatus(404);
                 return null;
             }
         }
         model.addAttribute("article", article);
-
-        // === 如果是爬虫，则直接返回爬虫页面 ===
-        // 1. 判断浏览器标识
-        if (ipUtil.isSpider(userAgent)) {
-            return "article/articleDetailRobot";
-        }
-        // 2. 判断IP是否为云服务器访问
-        IpInfo ipInfo = ipInfoService.getByIpStr(ipUtil.getIpAddress(servletRequest));
-        if (ipInfo != null && ipUtil.operatorIsCloud(ipInfo.getOperator())) {
-            return "article/articleDetailRobot";
-        }
 
         // === 获取评论内容 ===
         model.addAttribute("discussList", discussService.list(articleId, false));
@@ -188,7 +171,7 @@ public class ArticleController {
                 session.setAttribute("nickname", nickname);
             }
             Cookie cookie = new Cookie("nickname", URLEncoder.encode(nickname, StandardCharsets.UTF_8));
-            cookie.setMaxAge(SystemConstant.COOKIE_AGE);
+            cookie.setMaxAge(315360000);
             cookie.setPath("/");
             servletResponse.addCookie(cookie);
         } else {
@@ -207,7 +190,7 @@ public class ArticleController {
                 session.setAttribute("mark", mark);
             }
             Cookie cookie = new Cookie("mark", mark);
-            cookie.setMaxAge(SystemConstant.COOKIE_AGE);
+            cookie.setMaxAge(315360000);
             cookie.setPath("/");
             servletResponse.addCookie(cookie);
         } else {
@@ -236,28 +219,26 @@ public class ArticleController {
             // 有任意一个为空，非正常访问，直接返回
             return Result.error();
         }
-
-        // 判断用户标识
-        if (ipUtil.isSpider(userAgent)) {
-            return Result.error();
-        }
-        // 获取用户IP
-        String ipStr = ipUtil.getIpAddress(servletRequest);
-        // 判断IP是否为云服务器访问
-        IpInfo ipInfo = ipInfoService.getByIpStr(ipStr);
-        if (ipInfo != null && ipUtil.operatorIsCloud(ipInfo.getOperator())) {
-            return Result.error();
-        }
-
-        // 特殊情况，用户标识存在，且已访问过
+        // 用户标识存在，且已访问过
         boolean hasLog = logArticleService.checkHasLog(fromRequest.getArticleId(), mark);
         if (hasLog) {
             return Result.other(ResultEnum.EXIST_LOG);
         }
+
+        // 获取用户IP
+        String ipStr = ipUtil.getIpAddress(servletRequest);
+
+        // 检查浏览器标识和IP是否被屏蔽
+        Integer blockId = logArticleService.checkNeedBlock(userAgent, ipStr);
+
+        // 添加日志
+        logArticleService.add(fromRequest.getArticleId(), mark, fromRequest.getReferer(), userAgent, ipStr, blockId);
         // 添加浏览量
-        articleService.addView(fromRequest.getArticleId());
-        logArticleService.add(fromRequest.getArticleId(), mark, fromRequest.getReferer(), userAgent, ipStr);
-        return Result.success();
+        if (blockId == null) {
+            articleService.addView(fromRequest.getArticleId());
+            return Result.success();
+        }
+        return Result.fail();
     }
 
     /**

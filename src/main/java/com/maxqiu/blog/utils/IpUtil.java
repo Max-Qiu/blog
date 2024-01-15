@@ -53,25 +53,4 @@ public class IpUtil {
     private boolean isNotTheIp(String ip) {
         return ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip);
     }
-
-    /**
-     * 根据浏览器标识判断是否为爬虫
-     *
-     * @param userAgent
-     *            浏览器标识
-     */
-    public boolean isSpider(String userAgent) {
-        return userAgent.contains("spider") || userAgent.contains("bot") || userAgent.contains("HeadlessChrome");
-    }
-
-    /**
-     * 是否为云服务商
-     *
-     * @param operator
-     *            运营商
-     */
-    public boolean operatorIsCloud(String operator) {
-        return "微软云".equals(operator) || "阿里云".equals(operator) || "腾讯云".equals(operator) || "谷歌云".equals(operator) || "亚马逊云".equals(operator)
-            || "OVH".equals(operator);
-    }
 }

@@ -20,7 +20,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 
-import com.maxqiu.blog.common.SystemConstant;
 import com.maxqiu.blog.entity.User;
 import com.maxqiu.blog.service.LogLoginService;
 import com.maxqiu.blog.service.UserService;
@@ -92,7 +91,6 @@ public class SecurityConfig {
                     throws ServletException, IOException {
                     String name = authentication.getName();
                     User user = userService.getByUsername(name);
-                    request.getSession().setAttribute(SystemConstant.USER_ID_IN_SESSION_KEY, user.getId());
                     logLoginService.add(user.getId(), ipUtil.getIpAddress(request));
                     Cookie cookie = new Cookie("admin", "true");
                     cookie.setMaxAge(365 * 24 * 60 * 60);

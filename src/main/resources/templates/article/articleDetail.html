@@ -101,20 +101,13 @@
                     if (data.code == 0) {
                         $('#viewCount').html(([[${article.view}]] + 1));
                         $('#allViewCount').html([[${countView}]] + 1);
-                        $.cookie(
-                            'view[[${article.id}]]', '[[${article.id}]]', {
-                                'path': '/',
-                                'expires': 3650
-                            }
-                        );
-                    } else if (data.code == 1001) {
-                        $.cookie(
-                            'view[[${article.id}]]', '[[${article.id}]]', {
-                                'path': '/',
-                                'expires': 3650
-                            }
-                        );
                     }
+                    $.cookie(
+                        'view[[${article.id}]]', '[[${article.id}]]', {
+                            'path': '/',
+                            'expires': 3650
+                        }
+                    );
                 }
             });
         }

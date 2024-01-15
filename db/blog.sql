@@ -1,5 +1,5 @@
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `blog` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `blog` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `blog`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -14,13 +14,26 @@ CREATE TABLE `article` (
   `view` int NOT NULL COMMENT '浏览',
   `top` tinyint(1) NOT NULL COMMENT '置顶 0否 1是',
   `show` tinyint(1) NOT NULL COMMENT '展示 0否 1是',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建日期',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改日期',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modified_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `index_update_time` (`update_time`) USING BTREE,
   KEY `index_top` (`top`,`view`,`create_time`) USING BTREE,
-  KEY `index_page` (`top`,`create_time`) USING BTREE
+  KEY `index_page` (`top`,`create_time`) USING BTREE,
+  KEY `idx_show` (`show`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='文章';
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `block_view` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `type` tinyint unsigned NOT NULL COMMENT '类型 1浏览器标识 2IP运营商',
+  `condition` tinyint unsigned NOT NULL COMMENT '条件 1= 2like',
+  `value` varchar(255) NOT NULL COMMENT '值',
+  `priority` int unsigned NOT NULL COMMENT '判断优先级',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='屏蔽访问';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -33,7 +46,8 @@ CREATE TABLE `discuss` (
   `revert_id` int unsigned NOT NULL COMMENT '回复的用户ID',
   `check` tinyint(1) NOT NULL COMMENT '是否审核过的 0否 1是',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_article_id_check` (`article_id`,`check`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='评论';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -67,10 +81,12 @@ CREATE TABLE `label` (
 CREATE TABLE `log_article` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `article_id` int unsigned NOT NULL COMMENT '文章ID',
-  `cookie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '用户cookie',
+  `cookie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户cookie',
   `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '浏览器标识',
   `referer` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '来源',
   `ip` bigint unsigned NOT NULL COMMENT '访问者IP（long）',
+  `blocked` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '屏蔽 0否 1是',
+  `block_id` int DEFAULT NULL COMMENT '屏蔽原因ID',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='文章访问日志';
@@ -209,8 +225,8 @@ CREATE TABLE `persistent_logins` (
   `series` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `last_used` timestamp NOT NULL,
-  PRIMARY KEY (`series`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`series`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;

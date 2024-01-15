@@ -1,7 +1,5 @@
 package com.maxqiu.blog.request;
 
-import com.maxqiu.blog.common.SystemConstant;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,5 +21,5 @@ public abstract class AbstractPageRequest {
     /**
      * 页面大小
      */
-    private Integer pageSize = SystemConstant.PAGE_SIZE;
+    private Integer pageSize = 10;
 }

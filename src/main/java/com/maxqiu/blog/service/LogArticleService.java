@@ -51,7 +51,7 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
                     return blockView.getId();
                 }
             }
-            if (BlockViewTypeEnum.IP_OPERATOR.equals(blockView.getType()) && StrUtil.isNotBlank(ipInfo.getOperator())) {
+            if (BlockViewTypeEnum.IP_OPERATOR.equals(blockView.getType()) && ipInfo != null && StrUtil.isNotBlank(ipInfo.getOperator())) {
                 if (condition(blockView.getCondition(), ipInfo.getOperator(), blockView.getValue())) {
                     return blockView.getId();
                 }
@@ -74,20 +74,18 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
     }
 
     /**
-     * 检查日志是否存在
+     * 统计日志数量
      *
      * @param articleId
      *            文章ID
-     * @param cookie
+     * @param mark
      *            用户标识
      */
-    public boolean checkHasLog(Integer articleId, String cookie) {
-        // 判断是否已浏览过
+    public long count(Integer articleId, String mark) {
         LambdaQueryWrapper<LogArticle> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(LogArticle::getArticleId, articleId);
-        wrapper.eq(LogArticle::getCookie, cookie);
-        List<LogArticle> list = list(wrapper);
-        return list.size() > 0;
+        wrapper.eq(LogArticle::getMark, mark);
+        return count(wrapper);
     }
 
     /**
@@ -109,7 +107,7 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
     public void add(Integer articleId, String mark, String referer, String userAgent, String ipStr, Integer blockId) {
         LogArticle logArticle = new LogArticle();
         logArticle.setArticleId(articleId);
-        logArticle.setCookie(mark);
+        logArticle.setMark(mark);
         logArticle.setUserAgent(userAgent);
         if (StringUtils.hasText(referer)) {
             logArticle.setReferer(referer);

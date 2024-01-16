@@ -4,7 +4,7 @@
     <li th:each="discuss,discussStat:${discussList}" th:style="'margin-left:' + ${discuss.tier * 50} + 'px'">
         <div class="list-txt">
             <p class="user-nick"><span class="name" th:text="${discuss.nickname}">昵称</span><span th:if="${parentsNickname != null}">&nbsp;回复&nbsp;<span class="name" th:text="${parentsNickname}">被回复昵称</span></span><span class="time" th:text="${#temporals.format(discuss.createTime, 'yyyy/MM/dd HH:mm:ss')}">2021/01/01 12:00:00</span></p>
-            <p class="list-content"><span th:text="${discuss.content}">内容</span><span class="revert" th:onclick="'revert(\'' + @{(${discuss.nickname})} + '\','+ ${discuss.id} +')'" onclick="revert('昵称',123)">回复</span></p>
+            <p class="list-content"><span th:text="${discuss.content}">内容</span><span class="revert" th:if="${showDiscuss}" th:onclick="'revert(\'' + @{(${discuss.nickname})} + '\','+ ${discuss.id} +')'" onclick="revert('昵称',123)">回复</span></p>
         </div>
         <th:block th:insert="~{article/discuss :: discuss(discussList=${discuss.childList},parentsNickname=${discuss.nickname})}">
         </th:block>

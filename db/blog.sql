@@ -30,10 +30,10 @@ CREATE TABLE `block_view` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `type` tinyint unsigned NOT NULL COMMENT '类型 1浏览器标识 2IP运营商',
   `condition` tinyint unsigned NOT NULL COMMENT '条件 1= 2like',
-  `value` varchar(255) NOT NULL COMMENT '值',
+  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '值',
   `priority` int unsigned NOT NULL COMMENT '判断优先级',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='屏蔽访问';
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='屏蔽访问';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -81,14 +81,15 @@ CREATE TABLE `label` (
 CREATE TABLE `log_article` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `article_id` int unsigned NOT NULL COMMENT '文章ID',
-  `cookie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户cookie',
+  `mark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户标记',
   `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '浏览器标识',
   `referer` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '来源',
   `ip` bigint unsigned NOT NULL COMMENT '访问者IP（long）',
   `blocked` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '屏蔽 0否 1是',
   `block_id` int DEFAULT NULL COMMENT '屏蔽原因ID',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_aid_mark` (`article_id`,`mark`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='文章访问日志';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

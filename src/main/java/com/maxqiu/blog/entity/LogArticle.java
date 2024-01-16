@@ -42,10 +42,10 @@ public class LogArticle extends Model<LogArticle> {
     private Integer articleId;
 
     /**
-     * 用户cookie
+     * 用户标记
      */
-    @TableField("cookie")
-    private String cookie;
+    @TableField("mark")
+    private String mark;
 
     /**
      * 浏览器标识

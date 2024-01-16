@@ -21,7 +21,7 @@ public class WebMveConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] frontExcludes = new String[] {"/_admin/**", "/assets/**", "/favicon.ico", "/article/addView/**", "/article/addDiscuss/**"};
+        String[] frontExcludes = new String[] {"/_admin/**", "/assets/**", "/favicon.ico", "/article/addDiscuss/**"};
         registry.addInterceptor(frontInterceptor).addPathPatterns("/**").excludePathPatterns(frontExcludes);
     }
 

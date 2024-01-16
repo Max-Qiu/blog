@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +21,10 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.View;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maxqiu.blog.common.Result;
@@ -31,11 +32,9 @@ import com.maxqiu.blog.common.UserConstant;
 import com.maxqiu.blog.entity.Article;
 import com.maxqiu.blog.entity.ArticleEs;
 import com.maxqiu.blog.entity.Label;
-import com.maxqiu.blog.enums.ResultEnum;
 import com.maxqiu.blog.pojo.vo.ArticleVO;
 import com.maxqiu.blog.pojo.vo.PageResultVO;
 import com.maxqiu.blog.request.DiscussFromRequest;
-import com.maxqiu.blog.request.FrontAddViewFromRequest;
 import com.maxqiu.blog.request.FrontArticleSearchRequest;
 import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.DiscussService;
@@ -138,9 +137,18 @@ public class ArticleController {
      *            文章ID
      */
     @GetMapping("/detail/{articleId}")
-    public String detail(Model model, @RequestHeader(value = "referer", required = false) String referer,
-        @CookieValue(value = "nickname", defaultValue = "") String nickname, @CookieValue(value = "mark", defaultValue = "") String mark,
-        HttpSession session, HttpServletResponse servletResponse, @PathVariable Integer articleId) {
+    public Object detail(Model model, @RequestHeader("User-Agent") String userAgent,
+        @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "nickname", defaultValue = "") String nickname,
+        @CookieValue(value = "mark", defaultValue = "") String mark, HttpSession session, HttpServletRequest servletRequest,
+        HttpServletResponse servletResponse, @PathVariable Integer articleId) {
+        // === 判断文章后面是否有参数，如果有，则301跳转 ===
+        String queryString = servletRequest.getQueryString();
+        if (queryString != null) {
+            servletRequest.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.MOVED_PERMANENTLY);
+            servletResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            return "redirect:" + servletRequest.getRequestURI();
+        }
+
         // === 获取文章详细内容，并判断文章状态 ===
         Article article = articleService.getById(articleId);
         // 文章不存在，返回404
@@ -199,46 +207,23 @@ public class ArticleController {
             }
         }
 
-        // === 设置来源 ===
-        model.addAttribute("referer", referer);
-
-        return "article/articleDetail";
-    }
-
-    /**
-     * 添加浏览量
-     */
-    @PostMapping("addView")
-    @ResponseBody
-    public Result<Integer> addView(@RequestHeader("User-Agent") String userAgent, HttpServletRequest servletRequest, HttpSession session,
-        @RequestBody FrontAddViewFromRequest fromRequest) {
-        // 判断SESSION中的用户昵称和用户标识
-        String mark = (String)session.getAttribute("mark");
-        String nickname = (String)session.getAttribute("nickname");
-        if (ObjectUtils.isEmpty(mark) || ObjectUtils.isEmpty(nickname)) {
-            // 有任意一个为空，非正常访问，直接返回
-            return Result.error();
-        }
-        // 用户标识存在，且已访问过
-        boolean hasLog = logArticleService.checkHasLog(fromRequest.getArticleId(), mark);
-        if (hasLog) {
-            return Result.other(ResultEnum.EXIST_LOG);
-        }
-
+        // === 记录日志 ===
         // 获取用户IP
         String ipStr = ipUtil.getIpAddress(servletRequest);
-
         // 检查浏览器标识和IP是否被屏蔽
         Integer blockId = logArticleService.checkNeedBlock(userAgent, ipStr);
-
+        // 如果不需要屏蔽，则显示评论
+        model.addAttribute("showDiscuss", blockId == null);
         // 添加日志
-        logArticleService.add(fromRequest.getArticleId(), mark, fromRequest.getReferer(), userAgent, ipStr, blockId);
-        // 添加浏览量
-        if (blockId == null) {
-            articleService.addView(fromRequest.getArticleId());
-            return Result.success();
+        logArticleService.add(articleId, mark, referer, userAgent, ipStr, blockId);
+        // 添加浏览量（未屏蔽的访问且第一次访问）
+        long count = logArticleService.count(articleId, mark);
+        if (count <= 1 && blockId == null) {
+            articleService.addView(articleId);
+            article.setView(article.getView() + 1);
         }
-        return Result.fail();
+
+        return "article/articleDetail";
     }
 
     /**

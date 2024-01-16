@@ -24,7 +24,7 @@
     </div>
     <div class="message">
         <div class="layui-card">
-            <div class="layui-card-header">
+            <div class="layui-card-header" th:if="${showDiscuss}">
                 <form class="layui-form" action="">
                     <div class="layui-form-item layui-form-text">
                         <div class="nicknameDiv">
@@ -51,7 +51,7 @@
         </div>
     </div>
 </div>
-<div class="right-content">
+<div class="right-content" th:if="${showDiscuss}">
     <fieldset class="layui-elem-field layui-field-title">
         <legend>目录</legend>
     </fieldset>
@@ -81,37 +81,7 @@
 
         $("#toc-container").css("max-height", $(window).height() * 0.6);
 
-        view();
     });
-
-    function view() {
-        if ($.cookie('admin') != null) {
-            console.log("管理员不记录访问")
-            return;
-        }
-        if ($.cookie('view[[${article.id}]]') != [[${article.id}]]) {
-            let json = {"articleId": [[${article.id}]], "referer": "[[${referer}]]"};
-            $.ajax({
-                url: "/article/addView",
-                data: JSON.stringify(json),
-                method: "post",
-                dataType: "json",
-                contentType: 'application/json',
-                success: function (data) {
-                    if (data.code == 0) {
-                        $('#viewCount').html(([[${article.view}]] + 1));
-                        $('#allViewCount').html([[${countView}]] + 1);
-                    }
-                    $.cookie(
-                        'view[[${article.id}]]', '[[${article.id}]]', {
-                            'path': '/',
-                            'expires': 3650
-                        }
-                    );
-                }
-            });
-        }
-    }
 
     function discuss(content, revertId) {
         if (content.replace(/\s/g, '') == "") {

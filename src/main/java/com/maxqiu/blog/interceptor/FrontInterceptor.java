@@ -22,7 +22,7 @@ public class FrontInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        if (modelAndView != null) {
+        if (modelAndView != null && response.getStatus() == HttpServletResponse.SC_OK) {
             modelAndView.addObject("countShow", articleService.countShow());
             modelAndView.addObject("countView", articleService.countView());
         }

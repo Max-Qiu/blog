@@ -27,7 +27,6 @@ import com.maxqiu.blog.utils.IpUtil;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -92,10 +91,6 @@ public class SecurityConfig {
                     String name = authentication.getName();
                     User user = userService.getByUsername(name);
                     logLoginService.add(user.getId(), ipUtil.getIpAddress(request));
-                    Cookie cookie = new Cookie("admin", "true");
-                    cookie.setMaxAge(365 * 24 * 60 * 60);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
                     super.onAuthenticationSuccess(request, response, authentication);
                 }
             };

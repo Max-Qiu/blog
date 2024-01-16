@@ -159,9 +159,7 @@ public class ArticleController {
         // 文章是否可以查看
         if (!article.getShow()) {
             // 判断用户
-            if (SecurityContextHolder.getContext().getAuthentication() == null
-                || !SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                || !"admin".equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+            if (notAdmin()) {
                 servletResponse.setStatus(404);
                 return null;
             }
@@ -208,22 +206,30 @@ public class ArticleController {
         }
 
         // === 记录日志 ===
-        // 获取用户IP
-        String ipStr = ipUtil.getIpAddress(servletRequest);
-        // 检查浏览器标识和IP是否被屏蔽
-        Integer blockId = logArticleService.checkNeedBlock(userAgent, ipStr);
-        // 如果不需要屏蔽，则显示评论
-        model.addAttribute("showDiscuss", blockId == null);
-        // 添加日志
-        logArticleService.add(articleId, mark, referer, userAgent, ipStr, blockId);
-        // 添加浏览量（未屏蔽的访问且第一次访问）
-        long count = logArticleService.count(articleId, mark);
-        if (count <= 1 && blockId == null) {
-            articleService.addView(articleId);
-            article.setView(article.getView() + 1);
+        if (notAdmin()) {
+            // 获取用户IP
+            String ipStr = ipUtil.getIpAddress(servletRequest);
+            // 检查浏览器标识和IP是否被屏蔽
+            Integer blockId = logArticleService.checkNeedBlock(userAgent, ipStr);
+            // 如果不需要屏蔽，则显示评论
+            model.addAttribute("showDiscuss", blockId == null);
+            // 添加日志
+            logArticleService.add(articleId, mark, referer, userAgent, ipStr, blockId);
+            // 添加浏览量（未屏蔽的访问且第一次访问）
+            long count = logArticleService.count(articleId, mark);
+            if (count <= 1 && blockId == null) {
+                articleService.addView(articleId);
+                article.setView(article.getView() + 1);
+            }
         }
 
         return "article/articleDetail";
+    }
+
+    private boolean notAdmin() {
+        return SecurityContextHolder.getContext().getAuthentication() == null
+            || !SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+            || !"admin".equals(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     /**

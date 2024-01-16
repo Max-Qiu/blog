@@ -221,6 +221,9 @@ public class ArticleController {
                 articleService.addView(articleId);
                 article.setView(article.getView() + 1);
             }
+        } else {
+            // 管理员显示评论列表
+            model.addAttribute("showDiscuss", true);
         }
 
         return "article/articleDetail";

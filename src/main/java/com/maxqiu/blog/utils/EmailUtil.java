@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 邮件 服务
@@ -17,6 +18,7 @@ import jakarta.annotation.Resource;
  * @author Max_Qiu
  */
 @Component
+@Slf4j
 public class EmailUtil {
     /**
      * 邮件发送
@@ -51,7 +53,7 @@ public class EmailUtil {
         // 发件人
         message.setFrom(from);
         // 收件人
-        if (toList == null || toList.size() == 0) {
+        if (toList == null || toList.isEmpty()) {
             return false;
         } else if (toList.size() == 1) {
             message.setTo(toList.get(0));
@@ -66,7 +68,7 @@ public class EmailUtil {
         if (ccList != null) {
             if (ccList.size() == 1) {
                 message.setCc(ccList.get(0));
-            } else if (ccList.size() != 0) {
+            } else if (!ccList.isEmpty()) {
                 String[] strings = new String[ccList.size()];
                 for (int i = 0; i < strings.length; i++) {
                     strings[i] = ccList.get(i);
@@ -78,7 +80,7 @@ public class EmailUtil {
         if (bccList != null) {
             if (bccList.size() == 1) {
                 message.setCc(bccList.get(0));
-            } else if (bccList.size() != 0) {
+            } else if (!bccList.isEmpty()) {
                 String[] strings = new String[bccList.size()];
                 for (int i = 0; i < strings.length; i++) {
                     strings[i] = bccList.get(i);
@@ -94,7 +96,7 @@ public class EmailUtil {
         try {
             mailSender.send(message);
         } catch (MailException e) {
-            e.printStackTrace();
+            log.error("邮件发送失败", e);
             return false;
         }
         return true;

@@ -50,8 +50,7 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
                 if (condition(blockView.getCondition(), userAgent, blockView.getValue())) {
                     return blockView.getId();
                 }
-            }
-            if (BlockViewTypeEnum.IP_OPERATOR.equals(blockView.getType()) && ipInfo != null && StrUtil.isNotBlank(ipInfo.getOperator())) {
+            } else if (BlockViewTypeEnum.IP_OPERATOR.equals(blockView.getType()) && ipInfo != null && StrUtil.isNotBlank(ipInfo.getOperator())) {
                 if (condition(blockView.getCondition(), ipInfo.getOperator(), blockView.getValue())) {
                     return blockView.getId();
                 }
@@ -63,11 +62,8 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
 
     private boolean condition(BlockViewConditionEnum conditionEnum, String key, String value) {
         if (conditionEnum.equals(BlockViewConditionEnum.EQ)) {
-            if (key.equals(value)) {
-                return true;
-            }
-        }
-        if (conditionEnum.equals(BlockViewConditionEnum.LIKE)) {
+            return key.equals(value);
+        } else if (conditionEnum.equals(BlockViewConditionEnum.LIKE)) {
             return key.contains(value);
         }
         return false;

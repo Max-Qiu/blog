@@ -137,7 +137,7 @@ public class ArticleController {
      *            文章ID
      */
     @GetMapping("/detail/{articleId}")
-    public Object detail(Model model, @RequestHeader("User-Agent") String userAgent,
+    public String detail(Model model, @RequestHeader("User-Agent") String userAgent,
         @RequestHeader(value = "referer", required = false) String referer, @CookieValue(value = "nickname", defaultValue = "") String nickname,
         @CookieValue(value = "mark", defaultValue = "") String mark, HttpSession session, HttpServletRequest servletRequest,
         HttpServletResponse servletResponse, @PathVariable Integer articleId) {
@@ -156,10 +156,11 @@ public class ArticleController {
             servletResponse.setStatus(404);
             return null;
         }
+        boolean isAdmin = "admin".equals(SecurityContextHolder.getContext().getAuthentication().getName());
         // 文章是否可以查看
         if (!article.getShow()) {
             // 判断用户
-            if (notAdmin()) {
+            if (!isAdmin) {
                 servletResponse.setStatus(404);
                 return null;
             }
@@ -173,7 +174,7 @@ public class ArticleController {
         if (ObjectUtils.isEmpty(nickname)) {
             nickname = (String)session.getAttribute("nickname");
             if (ObjectUtils.isEmpty(nickname)) {
-                nickname = UserConstant.getRandomNickname();
+                nickname = isAdmin ? "管理员" : UserConstant.getRandomNickname();
                 session.setAttribute("nickname", nickname);
             }
             Cookie cookie = new Cookie("nickname", URLEncoder.encode(nickname, StandardCharsets.UTF_8));
@@ -192,7 +193,7 @@ public class ArticleController {
         if (ObjectUtils.isEmpty(mark)) {
             mark = (String)session.getAttribute("mark");
             if (ObjectUtils.isEmpty(mark)) {
-                mark = UUID.randomUUID().toString();
+                mark = isAdmin ? "admin" : UUID.randomUUID().toString();
                 session.setAttribute("mark", mark);
             }
             Cookie cookie = new Cookie("mark", mark);
@@ -206,7 +207,10 @@ public class ArticleController {
         }
 
         // === 记录日志 ===
-        if (notAdmin()) {
+        if (isAdmin) {
+            // 管理员仅显示评论列表，不记录访问日志
+            model.addAttribute("showDiscuss", true);
+        } else {
             // 获取用户IP
             String ipStr = ipUtil.getIpAddress(servletRequest);
             // 检查浏览器标识和IP是否被屏蔽
@@ -221,18 +225,9 @@ public class ArticleController {
                 articleService.addView(articleId);
                 article.setView(article.getView() + 1);
             }
-        } else {
-            // 管理员显示评论列表
-            model.addAttribute("showDiscuss", true);
         }
 
         return "article/articleDetail";
-    }
-
-    private boolean notAdmin() {
-        return SecurityContextHolder.getContext().getAuthentication() == null
-            || !SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-            || !"admin".equals(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     /**

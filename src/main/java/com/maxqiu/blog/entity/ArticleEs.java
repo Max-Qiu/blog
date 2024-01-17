@@ -24,8 +24,6 @@ import lombok.Setter;
 @Document(indexName = "blog_article")
 @Setting(shards = 1, replicas = 0)
 public class ArticleEs {
-    private static final long serialVersionUID = 1L;
-
     /**
      * 文章主键ID
      */

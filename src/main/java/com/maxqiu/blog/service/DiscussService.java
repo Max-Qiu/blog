@@ -122,7 +122,7 @@ public class DiscussService extends ServiceImpl<DiscussMapper, Discuss> {
         removeByIds(discussIdList);
         // 查找自己儿子
         List<Discuss> childList = baseMapper.findByIds(discussIdList);
-        if (childList.size() != 0) {
+        if (!childList.isEmpty()) {
             List<Integer> childIds = new ArrayList<>();
             for (Discuss discuss : childList) {
                 childIds.add(discuss.getId());

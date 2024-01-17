@@ -127,7 +127,6 @@ public class SecurityConfig {
         http.csrf(CsrfConfigurer::disable);
 
         // 设置请求头中的 X-Frame-Options 为 SAMEORIGIN 模式
-        // http.headers().frameOptions().sameOrigin();
         http.headers(configurer -> configurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         return http.build();

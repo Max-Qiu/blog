@@ -109,8 +109,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(value = Throwable.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public Result<String> handleException(Throwable throwable) {
-        log.error("其他异常：{}", throwable.toString());
-        throwable.printStackTrace();
+        log.error("其他异常", throwable);
         return Result.error();
     }
 }

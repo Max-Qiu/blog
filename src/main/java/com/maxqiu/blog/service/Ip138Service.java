@@ -16,6 +16,7 @@ import com.maxqiu.blog.pojo.dto.Ip138InfoDTO;
 import com.maxqiu.blog.properties.Ip138Properties;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ip138 服务
@@ -23,6 +24,7 @@ import jakarta.annotation.Resource;
  * @author Max_Qiu
  */
 @Service
+@Slf4j
 public class Ip138Service {
     @Resource
     private Ip138Properties ip138Properties;
@@ -90,7 +92,7 @@ public class Ip138Service {
                 return dto;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("IP138数据解析失败", e);
         }
         return null;
     }

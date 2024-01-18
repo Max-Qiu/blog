@@ -123,6 +123,8 @@ body {
     height: 30px;
     line-height: 30px;
     padding: 0 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 .right-content a {

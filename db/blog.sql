@@ -89,7 +89,7 @@ CREATE TABLE `log_article` (
   `block_id` int DEFAULT NULL COMMENT '屏蔽原因ID',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_aid_mark` (`article_id`,`mark`)
+  KEY `idx_aid_mark` (`article_id`,`mark`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='文章访问日志';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

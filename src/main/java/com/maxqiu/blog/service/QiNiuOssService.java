@@ -23,7 +23,7 @@ import jakarta.annotation.Resource;
  */
 @Service
 public class QiNiuOssService {
-    private static final Configuration CONFIGURATION = new Configuration(Region.huadong());
+    private static final Configuration CONFIGURATION = new Configuration(Region.createWithRegionId("z0"));
 
     @Resource
     private QiNiuOssProperties ossProperties;

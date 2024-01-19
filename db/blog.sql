@@ -31,7 +31,6 @@ CREATE TABLE `block_view` (
   `type` tinyint unsigned NOT NULL COMMENT '类型 1浏览器标识 2IP运营商',
   `condition` tinyint unsigned NOT NULL COMMENT '条件 1= 2like',
   `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '值',
-  `priority` int unsigned NOT NULL COMMENT '判断优先级',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='屏蔽访问';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -89,7 +88,8 @@ CREATE TABLE `log_article` (
   `block_id` int DEFAULT NULL COMMENT '屏蔽原因ID',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_aid_mark` (`article_id`,`mark`) USING BTREE
+  KEY `idx_aid_mark` (`article_id`,`mark`) USING BTREE,
+  KEY `idx_blocked` (`blocked`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='文章访问日志';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

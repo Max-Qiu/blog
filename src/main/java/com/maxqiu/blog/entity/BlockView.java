@@ -54,12 +54,6 @@ public class BlockView extends Model<BlockView> {
     @TableField("`value`")
     private String value;
 
-    /**
-     * 判断优先级
-     */
-    @TableField("priority")
-    private Integer priority;
-
     @Override
     public Serializable pkVal() {
         return this.id;

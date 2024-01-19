@@ -6,8 +6,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.maxqiu.blog.entity.BlockView;
 import com.maxqiu.blog.mapper.BlockViewMapper;
@@ -23,10 +21,8 @@ public class BlockViewService extends ServiceImpl<BlockViewMapper, BlockView> {
     /**
      * 按优先级排序
      */
-    @Cacheable(key = "'listByPriority'", cacheManager = "noExpire")
-    public List<BlockView> listByPriority() {
-        LambdaQueryWrapper<BlockView> wrapper = Wrappers.lambdaQuery();
-        wrapper.orderByAsc(BlockView::getPriority, BlockView::getId);
-        return list(wrapper);
+    @Cacheable(key = "'listOrderByCount'", cacheManager = "expire1day")
+    public List<BlockView> listOrderByCount() {
+        return baseMapper.listOrderByCount();
     }
 }

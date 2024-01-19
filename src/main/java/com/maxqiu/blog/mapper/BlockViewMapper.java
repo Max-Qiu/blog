@@ -1,5 +1,7 @@
 package com.maxqiu.blog.mapper;
 
+import java.util.List;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.maxqiu.blog.entity.BlockView;
 
@@ -9,5 +11,5 @@ import com.maxqiu.blog.entity.BlockView;
  * @author Max_Qiu
  */
 public interface BlockViewMapper extends BaseMapper<BlockView> {
-
+    List<BlockView> listOrderByCount();
 }

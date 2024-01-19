@@ -39,7 +39,7 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
      */
     public Integer checkNeedBlock(String userAgent, String ipStr) {
         // 获取所有的屏蔽规则
-        List<BlockView> blockViewList = blockViewService.listByPriority();
+        List<BlockView> blockViewList = blockViewService.listOrderByCount();
 
         // 获取IP信息
         IpInfo ipInfo = ipInfoService.getByIpStr(ipStr);

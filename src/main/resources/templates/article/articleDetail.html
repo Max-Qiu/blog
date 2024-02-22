@@ -14,7 +14,7 @@
 <div class="main detail">
     <div class="item">
         <div class="item_title" th:text="${article.title}">标题</div>
-        <p class="label"><span th:text="${#temporals.format(article.createTime, 'yyyy/MM/dd')}">2021/01/01</span><span th:each="name,nameStat:${article.labelNames.split(',')}">&nbsp;&nbsp;<span class="subtitle" th:text="${name}">Nacos</span></span></p>
+        <p class="label">创建日期：<span th:text="${#temporals.format(article.createTime, 'yyyy/MM/dd')}">2021/01/01</span>&nbsp;&nbsp;&nbsp;修改日期：<span th:text="${#temporals.format(article.modifiedTime, 'yyyy/MM/dd')}">2021/01/01</span><span th:each="name,nameStat:${article.labelNames.split(',')}">&nbsp;&nbsp;&nbsp;<span class="subtitle" th:text="${name}">Nacos</span></span></p>
         <div id="editormdDiv">
             <textarea style="display:none;" th:text="${article.md}">内容</textarea>
         </div>

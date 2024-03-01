@@ -51,9 +51,8 @@ CREATE TABLE `discuss` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ip_info` (
+CREATE TABLE `ipv4_info` (
   `id` bigint unsigned NOT NULL COMMENT '主键ID（即IPV4转long）',
-  `str` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字符串（即IPV4字符串）',
   `country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '国家',
   `province` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '省份/自治区/直辖市',
   `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地级市',
@@ -64,6 +63,22 @@ CREATE TABLE `ip_info` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='IP地址信息缓存';
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ipv6_info` (
+  `id` varbinary(16) NOT NULL COMMENT '主键ID（即IPV6字符串）',
+  `country` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '国家',
+  `province` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '省份/自治区/直辖市',
+  `city` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地级市',
+  `county` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '区/县',
+  `operator` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '运营商',
+  `postal_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮政编码',
+  `area_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地区区号',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='IP地址信息缓存';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -83,7 +98,8 @@ CREATE TABLE `log_article` (
   `mark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户标记',
   `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '浏览器标识',
   `referer` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '来源',
-  `ip` bigint unsigned NOT NULL COMMENT '访问者IP（long）',
+  `ipv4` bigint unsigned DEFAULT NULL COMMENT '访问者IPv4',
+  `ipv6` varbinary(16) DEFAULT NULL COMMENT '访问者IPv6',
   `blocked` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '屏蔽 0否 1是',
   `block_id` int DEFAULT NULL COMMENT '屏蔽原因ID',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -97,7 +113,7 @@ CREATE TABLE `log_article` (
 CREATE TABLE `log_login` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `user_id` int unsigned NOT NULL COMMENT '用户ID',
-  `ip` bigint unsigned NOT NULL COMMENT '登录IP（long）',
+  `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '登录IP',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间（登录时间）',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `accountId_index` (`user_id`) USING BTREE

@@ -9,5 +9,5 @@ import com.maxqiu.blog.entity.LogArticle;
  * @author Max_Qiu
  */
 public interface LogArticleMapper extends BaseMapper<LogArticle> {
-
+    void add(Integer articleId, String mark, String userAgent, String referer, Integer ipType, String ipStr, Integer blockId);
 }

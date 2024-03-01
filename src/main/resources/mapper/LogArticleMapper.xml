@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.maxqiu.blog.mapper.LogArticleMapper">
+
+    <insert id="add">
+        INSERT INTO `blog`.`log_article` (`article_id`, `mark`, `user_agent`, `referer`, `ipv4`, `ipv6`,
+        `blocked`, `block_id`)
+        VALUES (#{articleId}, #{mark}, #{userAgent}, #{referer},
+        <if test="ipType == 4">INET_ATON(#{ipStr})</if>
+        <if test="ipType != 4">NULL</if>,
+        <if test="ipType == 6">INET6_ATON(#{ipStr})</if>
+        <if test="ipType != 6">NULL</if>,
+        <if test="blockId != null">true</if>
+        <if test="blockId == null">false</if>,
+        #{blockId}
+        );
+    </insert>
+
 </mapper>

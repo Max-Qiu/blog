@@ -39,7 +39,7 @@ public class Ip138Service {
         if (!ip138Properties.getEnable()) {
             return null;
         }
-        String urlString = "https://api.ip138.com/ipv4/?ip=" + strIp + "&datatype=jsonp";
+        String urlString = "https://api.ip138.com/ip/?ip=" + strIp + "&datatype=jsonp";
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();

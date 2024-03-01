@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.maxqiu.blog.entity.LogLogin;
 import com.maxqiu.blog.mapper.LogLoginMapper;
 
-import cn.hutool.core.net.NetUtil;
-
 /**
  * 登录日志 服务类
  *
@@ -26,7 +24,7 @@ public class LogLoginService extends ServiceImpl<LogLoginMapper, LogLogin> {
     public boolean add(Integer userId, String ipStr) {
         LogLogin logLogin = new LogLogin();
         logLogin.setUserId(userId);
-        logLogin.setIp(NetUtil.ipv4ToLong(ipStr));
+        logLogin.setIp(ipStr);
         return logLogin.insert();
     }
 }

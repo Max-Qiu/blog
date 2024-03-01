@@ -218,7 +218,7 @@ public class ArticleController {
             // 如果不需要屏蔽，则显示评论
             model.addAttribute("showDiscuss", blockId == null);
             // 添加日志
-            logArticleService.add(articleId, mark, referer, userAgent, ipStr, blockId);
+            logArticleService.add(articleId, mark, userAgent, referer, ipStr, blockId);
             // 添加浏览量（未屏蔽的访问且第一次访问）
             long count = logArticleService.count(articleId, mark);
             if (count <= 1 && blockId == null) {

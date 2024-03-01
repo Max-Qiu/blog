@@ -2,20 +2,19 @@ package com.maxqiu.blog.service;
 
 import java.util.List;
 
+import org.apache.http.conn.util.InetAddressUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.maxqiu.blog.entity.BlockView;
-import com.maxqiu.blog.entity.IpInfo;
 import com.maxqiu.blog.entity.LogArticle;
 import com.maxqiu.blog.enums.BlockViewConditionEnum;
 import com.maxqiu.blog.enums.BlockViewTypeEnum;
 import com.maxqiu.blog.mapper.LogArticleMapper;
+import com.maxqiu.blog.pojo.dto.IpInfoDTO;
 
-import cn.hutool.core.net.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
 
@@ -42,7 +41,7 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
         List<BlockView> blockViewList = blockViewService.listOrderByCount();
 
         // 获取IP信息
-        IpInfo ipInfo = ipInfoService.getByIpStr(ipStr);
+        IpInfoDTO dto = ipInfoService.getByIpStr(ipStr);
 
         for (BlockView blockView : blockViewList) {
             // 按浏览器标识屏蔽
@@ -50,8 +49,8 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
                 if (condition(blockView.getCondition(), userAgent, blockView.getValue())) {
                     return blockView.getId();
                 }
-            } else if (BlockViewTypeEnum.IP_OPERATOR.equals(blockView.getType()) && ipInfo != null && StrUtil.isNotBlank(ipInfo.getOperator())) {
-                if (condition(blockView.getCondition(), ipInfo.getOperator(), blockView.getValue())) {
+            } else if (BlockViewTypeEnum.IP_OPERATOR.equals(blockView.getType()) && dto != null && StrUtil.isNotBlank(dto.getOperator())) {
+                if (condition(blockView.getCondition(), dto.getOperator(), blockView.getValue())) {
                     return blockView.getId();
                 }
             }
@@ -91,30 +90,17 @@ public class LogArticleService extends ServiceImpl<LogArticleMapper, LogArticle>
      *            文章ID
      * @param mark
      *            用户标识
-     * @param referer
-     *            来源
      * @param userAgent
      *            浏览器标识
+     * @param referer
+     *            来源
      * @param ipStr
      *            IP（String字符串）
      * @param blockId
      *            屏蔽ID
      */
-    public void add(Integer articleId, String mark, String referer, String userAgent, String ipStr, Integer blockId) {
-        LogArticle logArticle = new LogArticle();
-        logArticle.setArticleId(articleId);
-        logArticle.setMark(mark);
-        logArticle.setUserAgent(userAgent);
-        if (StringUtils.hasText(referer)) {
-            logArticle.setReferer(referer);
-        }
-        logArticle.setIp(NetUtil.ipv4ToLong(ipStr));
-        if (blockId == null) {
-            logArticle.setBlocked(false);
-        } else {
-            logArticle.setBlocked(true);
-            logArticle.setBlockId(blockId);
-        }
-        logArticle.insert();
+    public void add(Integer articleId, String mark, String userAgent, String referer, String ipStr, Integer blockId) {
+        baseMapper.add(articleId, mark, userAgent, referer, InetAddressUtils.isIPv4Address(ipStr) ? 4 : InetAddressUtils.isIPv6Address(ipStr) ? 6 : 0,
+            ipStr, blockId);
     }
 }

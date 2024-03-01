@@ -24,8 +24,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @ToString
 @Accessors(chain = true)
-@TableName("ip_info")
-public class IpInfo extends Model<IpInfo> {
+@TableName("ipv4_info")
+public class Ipv4Info extends Model<Ipv4Info> {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -33,12 +33,6 @@ public class IpInfo extends Model<IpInfo> {
      */
     @TableId("id")
     private Long id;
-
-    /**
-     * 字符串（即IPV4字符串）
-     */
-    @TableField("str")
-    private String str;
 
     /**
      * 国家

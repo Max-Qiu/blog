@@ -42,10 +42,10 @@ public class LogLogin extends Model<LogLogin> {
     private Integer userId;
 
     /**
-     * 登录IP（long）
+     * 登录IP
      */
     @TableField("ip")
-    private Long ip;
+    private String ip;
 
     /**
      * 创建时间（登录时间）

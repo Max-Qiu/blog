@@ -60,12 +60,6 @@ public class LogArticle extends Model<LogArticle> {
     private String referer;
 
     /**
-     * 访问者IP（long）
-     */
-    @TableField("ip")
-    private Long ip;
-
-    /**
      * 屏蔽 0否 1是
      */
     @TableField("blocked")

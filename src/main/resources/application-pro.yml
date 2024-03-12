@@ -26,8 +26,6 @@ spring:
     username: xxx@xxx.com # 用户名（发件邮箱账号）
     password: xxxxxxxx # 密码（发件人邮箱密码）
     admin-mail: xxx@xxx.com # 管理员收件邮箱（可与发件邮箱相同）
-  elasticsearch:
-    uris: http://elasticsearch:9200 # elasticsearch 连接地址
 # 日志配置
 logging:
   file:

@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.2.9</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.maxqiu.blog</groupId>
     <artifactId>blog</artifactId>
-    <version>5.3.0</version>
+    <version>5.3.1</version>
 
     <properties>
         <java.version>17</java.version>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-            <version>3.5.5</version>
+            <version>3.5.7</version>
         </dependency>
         <!-- elasticsearch -->
         <dependency>
@@ -105,24 +105,24 @@
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
-            <version>2.0.46</version>
+            <version>2.0.52</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2-extension-spring5</artifactId>
-            <version>2.0.46</version>
+            <artifactId>fastjson2-extension-spring6</artifactId>
+            <version>2.0.52</version>
         </dependency>
         <!-- hutool工具包 -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.26</version>
+            <version>5.8.32</version>
         </dependency>
         <!-- 七牛云 -->
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
-            <version>7.15.0</version>
+            <version>7.16.0</version>
         </dependency>
     </dependencies>
 

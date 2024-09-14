@@ -12,7 +12,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSerializer;
+import com.alibaba.fastjson2.support.spring6.data.redis.GenericFastJsonRedisSerializer;
 
 /**
  * Redis缓存配置
@@ -21,6 +21,7 @@ import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSeria
  */
 @Configuration
 public class RedisCacheConfig {
+
     /**
      * 默认Redis全局配置。（30分钟超时）
      */
@@ -72,4 +73,5 @@ public class RedisCacheConfig {
             // 设置value序列化器（这里使用阿里巴巴的Fastjson格式化工具）
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericFastJsonRedisSerializer()));
     }
+
 }

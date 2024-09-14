@@ -8,7 +8,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSerializer;
+import com.alibaba.fastjson2.support.spring6.data.redis.GenericFastJsonRedisSerializer;
 
 /**
  * Redis操作配置
@@ -17,6 +17,7 @@ import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSeria
  */
 @Configuration
 public class RedisTemplateConfig {
+
     /**
      * 自定义RedisTemplate，使用fastjson格式化value
      */
@@ -36,4 +37,5 @@ public class RedisTemplateConfig {
         template.setEnableTransactionSupport(true);
         return template;
     }
+
 }

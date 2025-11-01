@@ -7,7 +7,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import com.maxqiu.blog.entity.Nickname;
-import com.maxqiu.blog.service.ArticleService;
 import com.maxqiu.blog.service.NicknameService;
 import com.maxqiu.blog.utils.SitemapUtil;
 
@@ -22,14 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class ApplicationRunnerImpl implements ApplicationRunner {
+
     @Resource
     private SitemapUtil sitemapUtil;
 
     @Resource
     private NicknameService nicknameService;
-
-    @Resource
-    private ArticleService articleService;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -43,7 +40,6 @@ public class ApplicationRunnerImpl implements ApplicationRunner {
         // 初始化随机用户昵称
         UserConstant.nicknameList = nicknameService.list().stream().map(Nickname::getNickname).collect(Collectors.toList());
 
-        // 将文章的文本数据重新导入ES库
-        articleService.flushAllToEs();
     }
+
 }

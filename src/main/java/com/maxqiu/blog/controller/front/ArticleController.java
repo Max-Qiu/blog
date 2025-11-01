@@ -4,18 +4,14 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +26,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.maxqiu.blog.common.Result;
 import com.maxqiu.blog.common.UserConstant;
 import com.maxqiu.blog.entity.Article;
-import com.maxqiu.blog.entity.ArticleEs;
 import com.maxqiu.blog.entity.Label;
 import com.maxqiu.blog.pojo.vo.ArticleVO;
 import com.maxqiu.blog.pojo.vo.PageResultVO;
@@ -57,6 +52,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("article")
 public class ArticleController {
+
     @Resource
     private ArticleService articleService;
 
@@ -81,50 +77,16 @@ public class ArticleController {
     @GetMapping("")
     public String page(Model model, FrontArticleSearchRequest request) {
         PageResultVO<ArticleVO> resultVO;
-        if (StringUtils.hasText(request.getSearch())) {
-            SearchHits<ArticleEs> searchHits =
-                articleService.search(request.getPageNumber(), request.getPageSize(), request.getLabelId(), request.getSearch());
-            List<SearchHit<ArticleEs>> searchHitList = searchHits.getSearchHits();
-            List<ArticleVO> collect = searchHitList.stream().map(item -> {
-                ArticleEs article = item.getContent();
-                ArticleVO vo = new ArticleVO(article);
-                // 处理高亮结果
-                Map<String, List<String>> highlightFields = item.getHighlightFields();
-                // 判断是否有高亮标题
-                List<String> title = highlightFields.get("title");
-                if (title == null) {
-                    vo.setTitle(article.getTitle());
-                } else {
-                    vo.setTitle(title.get(0));
-                }
-                // 是否有高亮文本
-                List<String> text = highlightFields.get("text");
-                if (text == null) {
-                    vo.setText("");
-                } else {
-                    String s = text.toString();
-                    s = s.substring(1, s.length() - 1);
-                    s = s.replace(", ", "<br><br>");
-                    vo.setText(s);
-                }
-                return vo;
-            }).collect(Collectors.toList());
-            resultVO = new PageResultVO<>(collect, request.getPageNumber().longValue(), request.getPageSize().longValue(), searchHits.getTotalHits());
-        } else {
-            Page<Article> page = articleService.pageQuery(request.getPageNumber(), request.getPageSize(), request.getLabelId());
-            List<ArticleVO> collect = page.getRecords().stream().map(ArticleVO::new).collect(Collectors.toList());
-            resultVO = new PageResultVO<>(collect, page.getCurrent(), page.getSize(), page.getTotal());
-        }
+
+        Page<Article> page = articleService.pageQuery(request.getPageNumber(), request.getPageSize(), request.getLabelId());
+        List<ArticleVO> collect = page.getRecords().stream().map(ArticleVO::new).collect(Collectors.toList());
+        resultVO = new PageResultVO<>(collect, page.getCurrent(), page.getSize(), page.getTotal());
         model.addAttribute("page", resultVO);
 
         // 显示标签列表
         List<Label> labelList = labelService.listAndDescByNum();
         model.addAttribute("labelList", labelList.stream().filter(e -> e.getCount() != 0).toList());
 
-        // 数据回显
-        if (StringUtils.hasText(request.getSearch())) {
-            model.addAttribute("search", request.getSearch());
-        }
         model.addAttribute("labelId", request.getLabelId());
 
         return "article/articleList";
@@ -239,4 +201,5 @@ public class ArticleController {
         emailService.sendRemindToAdmin(request.getArticleId(), request.getContent());
         return Result.byFlag(discussService.form(request.getArticleId(), request.getNickname(), request.getContent(), request.getRevertId()));
     }
+
 }

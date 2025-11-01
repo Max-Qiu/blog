@@ -2,21 +2,11 @@ package com.maxqiu.blog.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.HighlightQuery;
-import org.springframework.data.elasticsearch.core.query.highlight.Highlight;
-import org.springframework.data.elasticsearch.core.query.highlight.HighlightField;
-import org.springframework.data.elasticsearch.core.query.highlight.HighlightFieldParameters;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -24,13 +14,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.maxqiu.blog.entity.Article;
-import com.maxqiu.blog.entity.ArticleEs;
 import com.maxqiu.blog.mapper.ArticleMapper;
-import com.maxqiu.blog.repository.ArticleRepository;
 
 import cn.hutool.http.HtmlUtil;
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,14 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @CacheConfig(cacheNames = "blog")
 @Service
 public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
+
     @Resource
     private LabelService labelService;
-
-    @Resource
-    private ArticleRepository articleRepository;
-
-    @Resource
-    private ElasticsearchTemplate template;
 
     /**
      * 文章展示总量
@@ -87,55 +68,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      */
     public Page<Article> pageQuery(Integer pageNumber, Integer pageSize, Integer labelId) {
         return baseMapper.pageQuery(new Page<>(pageNumber, pageSize), labelId);
-    }
-
-    /**
-     * 搜索
-     *
-     * @param pageNumber
-     *            页码
-     * @param pageSize
-     *            分页大小
-     * @param labelId
-     *            标签ID
-     * @param search
-     *            搜索词
-     */
-    public SearchHits<ArticleEs> search(Integer pageNumber, Integer pageSize, Integer labelId, String search) {
-        // 子选项，标题和文章选中一个即可
-        BoolQuery.Builder childBoolQueryBuilder = QueryBuilders.bool();
-        // 标题匹配，可选
-        childBoolQueryBuilder.should(QueryBuilders.match(builder -> builder.field("title").query(search)));
-        // 文章匹配，可选
-        childBoolQueryBuilder.should(QueryBuilders.match(builder -> builder.field("text").query(search)));
-
-        BoolQuery.Builder boolQueryBuilder = QueryBuilders.bool();
-        // 标题和文章必须选中一个
-        boolQueryBuilder.must(childBoolQueryBuilder.build()._toQuery());
-        // 标签匹配，如果有，则必须
-        if (labelId != 0) {
-            boolQueryBuilder.must(QueryBuilders.matchPhrase(builder -> builder.field("labelIds").query(String.valueOf(labelId))));
-        }
-
-        // 标签匹配，如果有，则必须
-        boolQueryBuilder.must(QueryBuilders.match(builder -> builder.field("show").query(true)));
-
-        NativeQueryBuilder nativeQueryBuilder = new NativeQueryBuilder()
-            // 分页
-            .withPageable(PageRequest.of(pageNumber - 1, pageSize))
-            // 标题、文本高亮
-            .withHighlightQuery(new HighlightQuery(new Highlight(List.of(
-                new HighlightField("text",
-                    new HighlightFieldParameters.HighlightFieldParametersBuilder().withFragmentSize(250).withPreTags("<span style='color: #e9c984;'>")
-                        .withPostTags("</span>").build()),
-                new HighlightField("title",
-                    new HighlightFieldParameters.HighlightFieldParametersBuilder().withPreTags("<span style='color: #e9c984;'>")
-                        .withPostTags("</span>").build()))),
-                ArticleEs.class))
-            // 查询条件， 必须要有条件，否则无法高亮
-            .withQuery(boolQueryBuilder.build()._toQuery());
-        NativeQuery query = nativeQueryBuilder.build();
-        return template.search(query, ArticleEs.class);
     }
 
     /**
@@ -192,7 +124,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         }
         if (flag) {
             labelService.flushNum();
-            articleRepository.save(new ArticleEs(getById(article.getId())));
             return article.getId();
         } else {
             log.error("文章保存失败：{}", article);
@@ -212,14 +143,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         Article article = new Article();
         article.setId(articleId);
         article.setTop(top);
-        boolean flag = article.updateById();
-        if (flag) {
-            // 从数据库取出并重新保存数据
-            articleRepository.save(new ArticleEs(getById(articleId)));
-        } else {
-            log.error("文章更新置顶失败：{}", articleId);
-        }
-        return flag;
+        return article.updateById();
     }
 
     /**
@@ -239,8 +163,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
         if (flag) {
             // 刷新标签数量
             labelService.flushNum();
-            // 修改ES中的文章状态，从数据库取出并重新保存数据
-            articleRepository.save(new ArticleEs(getById(articleId)));
         } else {
             log.error("文章更新显示失败：{}", articleId);
         }
@@ -255,13 +177,7 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      */
     @CacheEvict(key = "'countView'")
     public void addView(Integer articleId) {
-        boolean flag = baseMapper.addView(articleId);
-        if (flag) {
-            // 从数据库取出并重新保存数据
-            articleRepository.save(new ArticleEs(getById(articleId)));
-        } else {
-            log.error("文章新增浏览失败：{}", articleId);
-        }
+        baseMapper.addView(articleId);
     }
 
     /**
@@ -291,14 +207,6 @@ public class ArticleService extends ServiceImpl<ArticleMapper, Article> {
      */
     public void flushName() {
         baseMapper.flushName();
-        flushAllToEs();
     }
 
-    /**
-     * 刷新所有文章至ES
-     */
-    public void flushAllToEs() {
-        List<ArticleEs> collect = list().stream().map(ArticleEs::new).collect(Collectors.toList());
-        articleRepository.saveAll(collect);
-    }
 }

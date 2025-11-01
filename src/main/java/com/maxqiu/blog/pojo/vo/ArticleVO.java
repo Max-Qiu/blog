@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.maxqiu.blog.entity.Article;
-import com.maxqiu.blog.entity.ArticleEs;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ArticleVO {
+
     /**
      * 文章主键ID
      */
@@ -90,15 +90,4 @@ public class ArticleVO {
         this.modifiedTime = article.getModifiedTime();
     }
 
-    public ArticleVO(ArticleEs article) {
-        this.id = article.getId();
-        this.labelIds = article.getLabelIds();
-        this.labelNames = article.getLabelNames();
-        this.title = article.getTitle();
-        this.text = article.getText();
-        this.view = article.getView();
-        this.top = article.getTop();
-        this.show = article.getShow();
-        this.createTime = article.getCreateTime();
-    }
 }

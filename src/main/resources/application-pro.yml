@@ -52,9 +52,3 @@ qi-niu:
     access-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # access
     secret-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # secret
     bucket: xxxxxx # bucket
-elasticsearch:
-  hostAndPorts: # elasticsearch 连接地址，可填写多个
-    - 127.0.0.1:9200
-  username: elastic
-  password: password
-  ca-fingerprint: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

@@ -11,17 +11,6 @@
 <th:block th:insert="~{layout :: public_page}">
 </th:block>
 <div class="main article">
-    <div class="search">
-        <form class="layui-form" onkeydown="if(event.keyCode==13){return find()}">
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon layui-icon-search"></i>
-                    </button>
-                    <input type="text" name="search" placeholder="开始全文搜索" class="layui-input" th:value="${search}">
-                </div>
-            </div>
-        </form>
-    </div>
     <!-- 搜索不到文章的展示 -->
     <div class="item" th:if="${page.totalRow == 0}">
         <div class="item-content">
@@ -64,7 +53,7 @@
             jump: function (obj, first) {
                 //首次不执行
                 if (!first) {
-                    jump("article?labelId=" + $("#labelSel .layui-btn-primary").attr("id") + "&search=" + $("input[name='search']").val() + "&pageNumber=" + obj.curr)
+                    jump("article?labelId=" + $("#labelSel .layui-btn-primary").attr("id") + "&pageNumber=" + obj.curr)
                 }
             }
         });
@@ -74,27 +63,7 @@
      * 类别
      */
     $("#labelSel").children().click(function () {
-        jump("article?labelId=" + $(this).attr("id") + "&search=" + $("input[name='search']").val())
-    })
-
-    /**
-     * 单击搜索按钮的时候调用
-     */
-    $("#searchBtn").click(function () {
-        find();
-    })
-
-    /**
-     * form表单单击回车时调用
-     */
-    function find() {
-        jump("article?labelId=" + $("#labelSel .layui-btn-primary").attr("id") + "&search=" + $("input[name='search']").val())
-        return false;
-    }
-
-    $(function () {
-        let t = $("input[name='search']").val();
-        $("input[name='search']").val("").focus().val(t);
+        jump("article?labelId=" + $(this).attr("id"))
     })
 </script>
 </body>

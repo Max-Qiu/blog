@@ -11,17 +11,6 @@
 <th:block th:insert="~{layout :: public_page}">
 </th:block>
 <div class="main index">
-    <div class="search">
-        <form class="layui-form" onkeydown="if(event.keyCode==13){return find()}">
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon layui-icon-search"></i>
-                    </button>
-                    <input type="text" name="search" placeholder="开始全文搜索" class="layui-input">
-                </div>
-            </div>
-        </form>
-    </div>
     <fieldset class="layui-elem-field layui-field-title">
         <legend>置顶与热门</legend>
     </fieldset>
@@ -65,25 +54,5 @@
 </div>
 <th:block th:insert="~{layout :: public_script}">
 </th:block>
-<script type="text/javascript">
-    /**
-     * 单击搜索按钮的时候调用
-     */
-    $("#searchBtn").click(function () {
-        find();
-    })
-
-    /**
-     * form表单单击回车时调用
-     */
-    function find() {
-        jump("article?search=" + $("input[name='search']").val())
-        return false;
-    }
-
-    $(function () {
-        $("input[name='search']").focus();
-    })
-</script>
 </body>
 </html>

@@ -47,12 +47,6 @@ spring:
       mail:
         smtp.ssl.enable: true # 开启 SSL 通道
         mime.splitlongparameters: false # 解决邮件发送附件不正常的问题
-  elasticsearch:
-    connection-timeout: 10s # 连接超时时间（默认1s）
-    socket-timeout: 30s # 数据读取超时时间（默认30s）
-logging:
-  level:
-    org.elasticsearch.client.RestClient: error # 删除 Elasticsearch 未设置密码的 WARN
 # 路径常量
 path:
   # web访问静态文件的路径前缀

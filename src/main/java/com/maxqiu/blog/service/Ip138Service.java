@@ -1,12 +1,5 @@
 package com.maxqiu.blog.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -15,6 +8,8 @@ import com.alibaba.fastjson2.JSONObject;
 import com.maxqiu.blog.pojo.dto.Ip138InfoDTO;
 import com.maxqiu.blog.properties.Ip138Properties;
 
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class Ip138Service {
+
     @Resource
     private Ip138Properties ip138Properties;
 
@@ -39,28 +35,10 @@ public class Ip138Service {
         if (!ip138Properties.getEnable()) {
             return null;
         }
-        String urlString = "https://api.ipshudi.com/ip/?ip=" + strIp + "&datatype=jsonp";
-        try {
-            URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setConnectTimeout(5 * 1000);
-            conn.setReadTimeout(5 * 1000);
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-            conn.setUseCaches(false);
-            conn.setInstanceFollowRedirects(false);
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("token", ip138Properties.getToken());
-            int responseCode = conn.getResponseCode();
-            if (responseCode == 200) {
-                StringBuilder builder = new StringBuilder();
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-                for (String s = br.readLine(); s != null; s = br.readLine()) {
-                    builder.append(s);
-                }
-                br.close();
-                // {"ret":"ok","ip":"203.208.60.61","data":["中国","北京","北京","","谷歌云","100000","010"]}
-                String s = builder.toString();
+        String urlString = "https://api.ipshudi.com/ip/?ip=" + strIp + "&datatype=jsonp&token=" + ip138Properties.getToken();
+        try (HttpResponse response = HttpRequest.get(urlString).execute()) {
+            if (response.getStatus() == 200) {
+                String s = response.body();
                 JSONObject jsonObject = JSONObject.parseObject(s);
                 if (jsonObject == null) {
                     return null;
@@ -91,9 +69,10 @@ public class Ip138Service {
                 }
                 return dto;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("IP138数据解析失败", e);
         }
         return null;
     }
+
 }

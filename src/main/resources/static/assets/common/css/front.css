@@ -167,6 +167,56 @@ body {
     width: 100%;
 }
 
+/* 搜索框 */
+.search {
+    text-align: center;
+}
+
+.search .layui-form {
+    display: inline-block;
+    width: 480px;
+    box-sizing: border-box;
+}
+
+.search .layui-input-block {
+    margin-left: 0;
+    position: relative;
+}
+
+.search .layui-input-block .layui-btn {
+    position: absolute;
+    right: 1px;
+    background-color: transparent;
+}
+
+.search .layui-input-block .layui-btn i {
+    color: #d1aa56;
+}
+
+.search .layui-input-block .layui-btn:hover {
+    opacity: 01;
+}
+
+.search .layui-input-block input::-webkit-input-placeholder {
+    color: #d1aa56;
+}
+
+.search .layui-input-block input::-ms-input-placeholder {
+    color: #d1aa56;
+}
+
+.search .layui-input-block .layui-input {
+    background: rgba(0, 0, 0, 0.5);
+    color: #d1aa56;
+    border: 1px solid #242320;
+    padding-right: 57px;
+}
+
+.search .layui-input-block .layui-input:hover,
+.search .layui-input-block .layui-input:focus {
+    border-color: #242320 !important;
+}
+
 /* 备案 */
 .bei-an {
     text-align: center;
@@ -252,12 +302,20 @@ body {
 
 /* 主页模块 */
 .index {
-    padding-top: 150px;
+    padding-top: 53px;
+}
+
+.index .search {
+    margin-bottom: 54px;
 }
 
 /* 文章模块 */
 .article {
-    padding-top: 206px;
+    padding-top: 53px;
+}
+
+.article .search {
+    margin-bottom: 100px;
 }
 
 /* 关于 */
@@ -496,5 +554,9 @@ body {
         position: relative;
         right: 0;
         top: 0;
+    }
+
+    .main .search {
+        margin-bottom: 0;
     }
 }

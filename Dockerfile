@@ -4,4 +4,4 @@ WORKDIR /blog
 ADD ./target/resources ./resources
 ADD ./target/lib ./lib
 ADD ./target/blog.jar ./
-CMD ["java","-Dloader.path=./lib","-XX:+PrintCommandLineFlags","-Xmx256m","-XX:+UseZGC","-jar","blog.jar","--spring.profiles.active=pro"]
+CMD ["java","-Dloader.path=./lib","-XX:+PrintCommandLineFlags","-jar","blog.jar","--spring.profiles.active=pro"]

@@ -34,16 +34,6 @@ logging:
 #mybatis-plus:
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 日志输出
-# 路径常量
-management:
-  endpoints:
-    web:
-      base-path: /actuator # 指定前置路径（测试环境使用默认地址）
-      exposure:
-        include: "logfile,prometheus" # 仅开启日志
-  health:
-    mail:
-      enabled: false # 关闭邮件服务健康检查（测试环境未配置邮箱）
 path:
   upload-local-path: C:\\blog-files\\upload\\ # 文件上传本地绝对路径
   cdn-path: # 静态文件加速地址

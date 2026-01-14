@@ -27,7 +27,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("user")
 public class User extends Model<User> {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 用户ID
@@ -48,6 +47,12 @@ public class User extends Model<User> {
     private String password;
 
     /**
+     * TOTP密钥
+     */
+    @TableField("totp_secret")
+    private String totpSecret;
+
+    /**
      * 创建时间
      */
     @TableField("create_time")
@@ -63,4 +68,5 @@ public class User extends Model<User> {
     public Serializable pkVal() {
         return this.id;
     }
+
 }

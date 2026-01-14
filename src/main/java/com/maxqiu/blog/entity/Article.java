@@ -27,7 +27,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("article")
 public class Article extends Model<Article> {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 文章主键ID
@@ -105,4 +104,5 @@ public class Article extends Model<Article> {
     public Serializable pkVal() {
         return this.id;
     }
+
 }

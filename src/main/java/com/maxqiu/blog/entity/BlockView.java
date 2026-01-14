@@ -28,7 +28,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("block_view")
 public class BlockView extends Model<BlockView> {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 主键ID
@@ -58,4 +57,5 @@ public class BlockView extends Model<BlockView> {
     public Serializable pkVal() {
         return this.id;
     }
+
 }

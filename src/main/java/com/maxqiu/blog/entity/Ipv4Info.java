@@ -26,7 +26,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("ipv4_info")
 public class Ipv4Info extends Model<Ipv4Info> {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 主键ID（即IPV4转long）
@@ -92,4 +91,5 @@ public class Ipv4Info extends Model<Ipv4Info> {
     public Serializable pkVal() {
         return this.id;
     }
+
 }

@@ -26,7 +26,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("label")
 public class Label extends Model<Label> {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 标签主键
@@ -50,4 +49,5 @@ public class Label extends Model<Label> {
     public Serializable pkVal() {
         return this.id;
     }
+
 }

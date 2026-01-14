@@ -23,6 +23,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("ipv6_info")
 public class Ipv6Info {
+
     /**
      * 主键ID（即IPV6字符串）
      */
@@ -82,4 +83,5 @@ public class Ipv6Info {
      */
     @TableField("update_time")
     private LocalDateTime updateTime;
+
 }

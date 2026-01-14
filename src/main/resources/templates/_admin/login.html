@@ -71,6 +71,10 @@
             <input id="password" type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input">
         </div>
         <div class="layui-form-item">
+            <label class="login-icon layui-icon layui-icon-vercode"></label>
+            <input id="totpCode" type="text" name="totpCode" lay-verify="required" placeholder="6位动态验证码" class="layui-input" maxlength="6">
+        </div>
+        <div class="layui-form-item">
             <input type="checkbox" id="remember-me" name="remember-me" title="记住我" checked>
         </div>
         <div class="layui-form-item">
@@ -103,7 +107,7 @@
         });
     });
 
-    $('#password').on('keydown', function (event) {
+    $('#password, #totpCode').on('keydown', function (event) {
         if (event.keyCode == 13) {
             $("#login-submit").trigger("click");
             return false

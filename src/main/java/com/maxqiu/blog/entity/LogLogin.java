@@ -27,7 +27,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("log_login")
 public class LogLogin extends Model<LogLogin> {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 主键ID
@@ -57,4 +56,5 @@ public class LogLogin extends Model<LogLogin> {
     public Serializable pkVal() {
         return this.id;
     }
+
 }

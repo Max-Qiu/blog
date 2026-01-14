@@ -18,10 +18,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 
 import com.maxqiu.blog.entity.User;
+import com.maxqiu.blog.security.TotpVerificationFilter;
 import com.maxqiu.blog.service.LogLoginService;
+import com.maxqiu.blog.service.TotpService;
 import com.maxqiu.blog.service.UserService;
 import com.maxqiu.blog.utils.IpUtil;
 
@@ -35,6 +38,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Configuration
 public class SecurityConfig {
+
     @Resource
     private UserService userService;
 
@@ -46,6 +50,9 @@ public class SecurityConfig {
 
     @Resource
     private DataSource dataSource;
+
+    @Resource
+    private TotpService totpService;
 
     /**
      * 用户详细信息
@@ -72,16 +79,28 @@ public class SecurityConfig {
     }
 
     /**
+     * TOTP 验证过滤器
+     */
+    @Bean
+    public TotpVerificationFilter totpVerificationFilter() {
+        return new TotpVerificationFilter(userService, totpService);
+    }
+
+    /**
      * 自定义安全配置
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // 在用户名密码认证过滤器之前添加 TOTP 验证过滤器
+        http.addFilterBefore(totpVerificationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         // 开启基于表单的身份验证
         http.formLogin(formLoginConfigurer -> {
             // 自定义登录页面
             formLoginConfigurer.loginPage("/_admin/login");
             // 设置登录成功后的处理器以及页面
             SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler() {
+
                 /**
                  * 重写 SavedRequestAwareAuthenticationSuccessHandler ，添加登录成功后的一些操作
                  */
@@ -93,6 +112,7 @@ public class SecurityConfig {
                     logLoginService.add(user.getId(), ipUtil.getIpAddress(request));
                     super.onAuthenticationSuccess(request, response, authentication);
                 }
+
             };
             successHandler.setDefaultTargetUrl("/_admin");
             formLoginConfigurer.successHandler(successHandler);
@@ -131,4 +151,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
